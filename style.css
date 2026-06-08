@@ -589,13 +589,6 @@ body.mode-nuit .btn-effacer { color: var(--blanc); border-color: var(--blanc); }
   object-fit: contain;
   background: transparent;
   display: block;
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-.carte-image.chargee {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .carte-btn-telecharger {

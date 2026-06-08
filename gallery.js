@@ -258,7 +258,7 @@ function creerCartePancarte(p, index) {
 
   article.innerHTML = `
     <img class="carte-image" src="${p.image}"
-      alt="${p.texte ? `pancarte : ${p.texte}` : `pancarte ${p.id}`}" />
+      alt="${p.texte ? `pancarte : ${p.texte}` : `pancarte ${p.id}`}" loading="lazy"/>
     <div class="carte-corps">
       ${texteLine}
       <div class="carte-meta-row">
