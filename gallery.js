@@ -217,7 +217,8 @@ function afficherGalerie() {
   });
 
   const anneesTriees = Object.keys(parAnnee).sort((a, b) => b - a);
-  const nbCol = document.querySelector(".col-num-actif")?.dataset.col || document.getElementById("curseur-col")?.value || 6;
+  const isMobile = window.innerWidth <= 600;
+  const nbCol = isMobile ? 2 : (document.querySelector(".col-num-actif")?.dataset.col || document.getElementById("curseur-col")?.value || 6);
 
   anneesTriees.forEach((annee) => {
     const section = document.createElement("section");
@@ -369,8 +370,9 @@ function mettreAJourCompteur(n) {
 }
 
 function appliquerColonnes(n) {
+  const cols = window.innerWidth <= 600 ? 2 : n;
   document.querySelectorAll(".annee-grille").forEach((g) => {
-    g.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
+    g.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
   });
 }
 

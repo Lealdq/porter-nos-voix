@@ -1371,7 +1371,8 @@ body.mode-nuit .carte-btn-telecharger:hover { color: var(--blanc); }
   /* ── Galerie ── */
   .annee-grille { grid-template-columns: repeat(2, 1fr) !important; }
   .carte-image  { height: 140px; }
-  .galerie-section { padding: 5vh 0 3rem; }
+  .galerie-section { padding: 1rem 0 3rem; }
+  .splash-hint { top: 1rem; font-size: 0.65rem; }
 
   /* ── Filtres ── */
   .filtres-top {
