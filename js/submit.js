@@ -86,8 +86,7 @@
 
     try {
       const r = await fetch(ENDPOINT, { method: "POST", body: data });
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      const j = await r.json();
+      const j = await r.json().catch(() => ({ success: false, message: `HTTP ${r.status}` }));
 
       if (j.success) {
         montrer(succes, T.ok());
@@ -95,13 +94,13 @@
         const apercu = document.getElementById("apercu-photo");
         if (apercu) { apercu.src = ""; apercu.style.display = "none"; }
       } else {
-        montrer(erreur, j.message ? `Erreur : ${j.message}` : T.err());
+        montrer(erreur, j.message || j.error || T.err());
       }
     } catch (err) {
-      if (err instanceof TypeError && err.message.includes("fetch")) {
+      if (err instanceof TypeError) {
         montrer(erreur, T.serveur());
       } else {
-        montrer(erreur, T.err());
+        montrer(erreur, err.message || T.err());
       }
     } finally {
       btn.disabled    = false;
