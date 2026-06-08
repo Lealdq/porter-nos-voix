@@ -1374,6 +1374,17 @@ body.mode-nuit .carte-btn-telecharger:hover { color: var(--blanc); }
   .galerie-section { padding: 1rem 0 3rem; }
   .splash-hint { top: 1rem; font-size: 0.65rem; }
 
+  /* Années : retirer le sticky flottant, les mettre au-dessus de la grille */
+  .annee-titre {
+    position: static;
+    height: auto;
+    transform: none;
+    overflow: visible;
+    padding: 1.5rem 1rem 0.5rem;
+    font-size: 0.85rem;
+    pointer-events: auto;
+  }
+
   /* ── Filtres ── */
   .filtres-top {
     flex-direction: column;
