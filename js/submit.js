@@ -2,17 +2,12 @@
 /* Envoi du formulaire de contribution.
    ─────────────────────────────────────────────────────────────────────
    • En local  (localhost) → serveur Ruby serve.rb sur le port 8787
-   • En ligne  (Netlify)   → Web3Forms  (email à lea94120@icloud.com)
-
-   Pour activer l'envoi en ligne :
-   1. Va sur https://web3forms.com
-   2. Entre lea94120@icloud.com → reçois ta clé par mail
-   3. Remplace VOTRE_CLE_WEB3FORMS ci-dessous par ta clé             */
+   • En ligne              → Formspree  https://formspree.io/f/xdavgrdd  */
 (function () {
   const IS_LOCAL = location.hostname === "localhost" || location.hostname === "127.0.0.1";
   const ENDPOINT = IS_LOCAL
     ? "http://localhost:8787/api/soumettre"
-    : "/";
+    : "https://formspree.io/f/xdavgrdd";
 
   const form   = document.getElementById("formulaire-soumission");
   if (!form) return;
@@ -63,24 +58,27 @@
 
     const data = new FormData(form);
 
-    // Netlify Forms nécessite le nom du formulaire
-    if (!IS_LOCAL) data.append("form-name", "contribution");
-
     const labelOrig = btn.textContent;
     btn.disabled    = true;
     btn.textContent = T.envoi();
 
     try {
-      const r = await fetch(ENDPOINT, { method: "POST", body: data });
-      const j = await r.json().catch(() => ({ success: false, message: `HTTP ${r.status}` }));
+      const r = await fetch(ENDPOINT, {
+        method: "POST",
+        body: data,
+        headers: { "Accept": "application/json" }
+      });
 
-      if (j.success) {
+      if (r.ok) {
         montrer(succes, T.ok());
         form.reset();
         const apercu = document.getElementById("apercu-photo");
         if (apercu) { apercu.src = ""; apercu.style.display = "none"; }
       } else {
-        montrer(erreur, j.message || j.error || T.err());
+        // Formspree renvoie { errors: [{ message: "..." }] } en cas d'erreur
+        const j = await r.json().catch(() => ({}));
+        const msg = (j.errors && j.errors[0] && j.errors[0].message) || T.err();
+        montrer(erreur, msg);
       }
     } catch (err) {
       if (err instanceof TypeError) {
