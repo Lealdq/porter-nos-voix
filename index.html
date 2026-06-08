@@ -3,245 +3,199 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>porter nos voix — archive de pancartes</title>
-  <meta name="description" content="Archive photographique de pancartes des manifestations du 8 mars, Journée internationale des droits des femmes.">
-  <meta property="og:title" content="porter nos voix — archive de pancartes">
-  <meta property="og:description" content="Archive photographique mondiale de pancartes féministes.">
-  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#e8000d">
+  <title>porter nos voix</title>
   <link rel="stylesheet" href="style.css?v=21">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #e8000d;
+      height: 100vh;
+      overflow: hidden;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      font-family: var(--font);
+    }
+
+    /* Écran 1 : titre */
+    #ecran-1 {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      transition: opacity 0.5s ease;
+      z-index: 10;
+    }
+    #ecran-1.cache { opacity: 0; pointer-events: none; }
+
+    #ecran-1 span {
+      font-size: 0.85rem;
+      color: #e2f2fb;
+      text-transform: lowercase;
+      letter-spacing: 0.03em;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+
+    @media (max-width: 600px) {
+      #ecran-1, #ecran-2 {
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
+        padding: 0 1.5rem !important;
+        gap: 0.35rem !important;
+      }
+      #ecran-1 span, #ecran-2 span {
+        max-width: 100% !important;
+        font-size: 1rem !important;
+        width: 100% !important;
+      }
+    }
+    #ecran-1 span::first-letter,
+    #ecran-2 span::first-letter { text-transform: uppercase; }
+
+    /* Écran 2 : même layout que écran 1 */
+    #ecran-2 {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: calc(50vh - 0.51rem) 2rem 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      z-index: 10;
+    }
+    #ecran-2.visible { opacity: 1; pointer-events: auto; }
+
+    #ecran-2 span {
+      font-size: 0.85rem;
+      color: #e2f2fb;
+      letter-spacing: 0.03em;
+      line-height: 1.2;
+      max-width: 28%;
+      text-align: left;
+      font-weight: 700;
+    }
+
+    /* Fade sortie */
+    #fade {
+      position: fixed;
+      inset: 0;
+      background: #4d2882;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease, background 0.4s ease;
+      z-index: 9999;
+    }
+    #fade.actif { opacity: 1; pointer-events: all; }
+  </style>
 </head>
 <body>
 
-          <!-- ── EN-TÊTE ─────────────────────────────────────────── -->
-  <header class="site-header" role="banner">
-    <div class="container">
-      <a href="home.html" class="site-logo">porter nos voix</a>
-      <nav class="site-nav">
-        <div class="nav-groupe">
-        <a href="index.html" class="active" aria-current="page" data-i18n="nav-archive">archive</a>
-        </div>
-        <div class="nav-groupe">
-        <a href="carte.html" data-i18n="nav-carte">carte</a>
-        <a href="explore.html" data-i18n="nav-explorer">explorer</a>
-        </div>
-        <div class="nav-groupe">
-        <a href="temoignage.html" data-i18n="nav-temoignages">témoignage</a>
-        <a href="stats.html" data-i18n="nav-chiffres">chiffre</a>
-        </div>
-        <div class="nav-groupe">
-        <a href="soumettre.html" data-i18n="nav-contribuer">contribuer</a>
-        <a href="apropos.html" data-i18n="nav-apropos">à propos</a>
-        </div>
-      </nav>
-      <div class="lang-switch">
-        <button class="lang-btn actif" data-lang="fr">FR</button>
-        <span class="lang-sep">/</span>
-        <button class="lang-btn" data-lang="en">EN</button>
-      </div>
-    </div>
-  </header>
-
-  <!-- ── FILTRES ──────────────────────────────────────────── -->
-  <div class="filtres-bar" role="search" aria-label="Filtres et recherche">
-    <div class="container">
-
-      <!-- Barre visible permanente -->
-      <div class="filtres-top">
-        <div class="filtres-top-left">
-          <button class="filtres-toggle" id="btn-filtres" data-i18n="filtrer" aria-expanded="false" aria-controls="filtres-panel" aria-label="Filtres">
-            filtrer
-          </button>
-          <div class="effacer-col">
-            <button id="btn-effacer" class="btn-effacer" data-i18n="tout-effacer" aria-label="Effacer tous les filtres" hidden>
-              tout effacer
-            </button>
-            <!-- Filtres appliqués, en colonne sous "tout effacer" -->
-            <div id="filtres-actifs-bar" class="filtres-actifs-bar" hidden></div>
-          </div>
-          <!-- Panneau filtres ancré sous le bouton -->
-          <div class="filtres-panel" id="filtres-panel" hidden>
-            <div class="filtres-panel-inner">
-              <div class="filtre-dropdown" id="dd-annee" data-cle="annee">
-                <button class="dd-btn" aria-haspopup="listbox" aria-expanded="false" data-i18n="filtre-annee">année</button>
-                <div class="dd-panel" role="listbox" aria-multiselectable="true"></div>
-              </div>
-              <div class="filtre-dropdown" id="dd-ville" data-cle="ville">
-                <button class="dd-btn" aria-haspopup="listbox" aria-expanded="false" data-i18n="filtre-ville">ville</button>
-                <div class="dd-panel" role="listbox" aria-multiselectable="true"></div>
-              </div>
-              <div class="filtre-dropdown" id="dd-pays" data-cle="pays">
-                <button class="dd-btn" aria-haspopup="listbox" aria-expanded="false" data-i18n="filtre-pays">pays</button>
-                <div class="dd-panel" role="listbox" aria-multiselectable="true"></div>
-              </div>
-              <div class="filtre-dropdown" id="dd-langue" data-cle="langue">
-                <button class="dd-btn" aria-haspopup="listbox" aria-expanded="false" data-i18n="filtre-langue">langue</button>
-                <div class="dd-panel" role="listbox" aria-multiselectable="true"></div>
-              </div>
-              <div class="filtre-dropdown" id="dd-categorie" data-cle="categorie">
-                <button class="dd-btn" aria-haspopup="listbox" aria-expanded="false" data-i18n="filtre-categorie">catégorie</button>
-                <div class="dd-panel" role="listbox" aria-multiselectable="true"></div>
-              </div>
-              <div class="filtre-dropdown" id="dd-couleur" data-cle="couleur">
-                <button class="dd-btn" aria-haspopup="listbox" aria-expanded="false" data-i18n="filtre-couleur">couleur</button>
-                <div class="dd-panel" role="listbox" aria-multiselectable="true"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="filtres-top-right">
-          <div class="col-picker" id="col-picker" aria-label="Nombre de colonnes">
-            <!-- 2 colonnes -->
-            <button class="col-num" data-col="2" aria-label="2 colonnes" title="2 colonnes">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-                <rect x="1" y="1" width="5" height="12" rx="0.5"/>
-                <rect x="8" y="1" width="5" height="12" rx="0.5"/>
-              </svg>
-            </button>
-            <!-- 3 colonnes -->
-            <button class="col-num" data-col="3" aria-label="3 colonnes" title="3 colonnes">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-                <rect x="1"   y="1" width="3" height="12" rx="0.5"/>
-                <rect x="5.5" y="1" width="3" height="12" rx="0.5"/>
-                <rect x="10"  y="1" width="3" height="12" rx="0.5"/>
-              </svg>
-            </button>
-            <!-- 4 colonnes -->
-            <button class="col-num" data-col="4" aria-label="4 colonnes" title="4 colonnes">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-                <rect x="1"    y="1" width="2" height="12" rx="0.5"/>
-                <rect x="4.33" y="1" width="2" height="12" rx="0.5"/>
-                <rect x="7.67" y="1" width="2" height="12" rx="0.5"/>
-                <rect x="11"   y="1" width="2" height="12" rx="0.5"/>
-              </svg>
-            </button>
-            <!-- 6 colonnes -->
-            <button class="col-num col-num-actif" data-col="6" aria-label="6 colonnes" title="6 colonnes">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-                <rect x="1"    y="1" width="1.2" height="12" rx="0.5"/>
-                <rect x="3.36" y="1" width="1.2" height="12" rx="0.5"/>
-                <rect x="5.72" y="1" width="1.2" height="12" rx="0.5"/>
-                <rect x="8.08" y="1" width="1.2" height="12" rx="0.5"/>
-                <rect x="10.44" y="1" width="1.2" height="12" rx="0.5"/>
-                <rect x="12.8" y="1" width="1.2" height="12" rx="0.5"/>
-              </svg>
-            </button>
-          </div>
-          <div class="recherche-wrapper" style="position:relative;">
-            <svg viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
-              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-            <input type="search" id="champ-recherche" placeholder="recherche par mot…" aria-label="Rechercher dans les pancartes" autocomplete="off">
-            <div class="mots-cles-strip" aria-label="Mots-clés suggérés">
-              <span class="mot-cle-chip" data-mot="femme">femme</span>
-              <span class="mot-cle-chip" data-mot="patriarcat">patriarcat</span>
-              <span class="mot-cle-chip" data-mot="corps">corps</span>
-              <span class="mot-cle-chip" data-mot="droits">droits</span>
-              <span class="mot-cle-chip" data-mot="violence">violence</span>
-              <span class="mot-cle-chip" data-mot="avortement">avortement</span>
-              <span class="mot-cle-chip" data-mot="travail">travail</span>
-              <span class="mot-cle-chip" data-mot="égalité">égalité</span>
-              <span class="mot-cle-chip" data-mot="solidarité">solidarité</span>
-              <span class="mot-cle-chip" data-mot="liberté">liberté</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div id="lang-home" style="position:fixed;top:0.6rem;right:1rem;z-index:9999;display:flex;align-items:center;gap:0.3rem;font-family:var(--font);font-size:0.72rem;font-weight:700;">
+    <button class="lang-btn" data-lang="fr" style="background:none;border:none;cursor:pointer;font-family:inherit;font-size:inherit;font-weight:inherit;color:#e2f2fb;padding:0;transition:color 0.15s;">FR</button>
+    <span style="color:#e2f2fb;opacity:0.5;">/</span>
+    <button class="lang-btn" data-lang="en" style="background:none;border:none;cursor:pointer;font-family:inherit;font-size:inherit;font-weight:inherit;color:#e2f2fb;padding:0;transition:color 0.15s;">EN</button>
   </div>
 
-  <script>
-    const btnFiltres = document.getElementById('btn-filtres');
-    const filtresPanel = document.getElementById('filtres-panel');
-    const filtresTopLeft = btnFiltres.closest('.filtres-top-left');
-    btnFiltres.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const ouvert = !filtresPanel.hidden;
-      filtresPanel.hidden = ouvert;
-      btnFiltres.setAttribute('aria-expanded', String(!ouvert));
-      btnFiltres.classList.toggle('actif', !ouvert);
-      filtresTopLeft.classList.toggle('panneau-ouvert', !ouvert);
-    });
-    document.addEventListener('click', (e) => {
-      if (!filtresPanel.contains(e.target) && e.target !== btnFiltres) {
-        filtresPanel.hidden = true;
-        btnFiltres.setAttribute('aria-expanded', 'false');
-        btnFiltres.classList.remove('actif');
-        filtresTopLeft.classList.remove('panneau-ouvert');
-      }
-    });
-  </script>
+  <div id="ecran-1">
+    <span>Porter nos voix</span>
+    <span data-i18n="home-sous-titre">Archive de pancartes féministes</span>
+    <span data-i18n="home-date">8 mars</span>
+  </div>
 
-  <!-- ── INDICATEUR ANNÉE ────────────────────────────────── -->
-  <div id="annee-indicator" aria-hidden="true"></div>
+  <div id="ecran-2">
+    <span data-i18n="home-ecran2-1">Porter nos voix est une archive photographique de pancartes issues des manifestations du 8 mars, journée internationale des droits des femmes et des minorités de genre.</span>
+  </div>
 
-  <!-- ── GALERIE ──────────────────────────────────────────── -->
-  <main class="galerie-section">
-    <div class="container">
-      <p class="resultats-info" role="status" aria-live="polite" style="display:none;">
-        <span id="resultats-count"></span>
-      </p>
-      <div id="galerie-grille" aria-label="Galerie de pancartes"></div>
-    </div>
-  </main>
+  <div id="fade"></div>
 
-  <!-- ── MODAL ────────────────────────────────────────────── -->
-  <div
-    id="modal-overlay"
-    class="modal-overlay"
-    role="region"
-    aria-label="Détail de la pancarte"
-    aria-hidden="true"
-  ></div>
-
-  <script src="gallery.js?v=15"></script>
-  <script>
-    // Cacher filtres au scroll bas, réafficher au scroll haut
-    let dernierScroll = 0;
-    const filtresBar = document.querySelector('.filtres-bar');
-    window.addEventListener('scroll', () => {
-      const scrollActuel = window.scrollY;
-      if (scrollActuel > 60) {
-        filtresBar.classList.toggle('masque', scrollActuel > dernierScroll);
-      } else {
-        filtresBar.classList.remove('masque');
-      }
-      dernierScroll = scrollActuel;
-
-      // Mettre à jour l'indicateur d'année
-      const midY = window.innerHeight / 2;
-      const sections = document.querySelectorAll('.annee-section');
-      let anneeVisible = '';
-      sections.forEach(s => {
-        const rect = s.getBoundingClientRect();
-        if (rect.top <= midY && rect.bottom >= midY) anneeVisible = s.id.replace('annee-', '');
-      });
-      if (!anneeVisible && sections.length) {
-        anneeVisible = sections[0].id.replace('annee-', '');
-      }
-      const ind = document.getElementById('annee-indicator');
-      if (ind && anneeVisible) {
-        ind.textContent = anneeVisible;
-        // Si tout en haut : positionner au-dessus de la première pancarte
-        const firstSection = sections[0];
-        if (firstSection) {
-          const firstRect = firstSection.getBoundingClientRect();
-          if (firstRect.top > 0) {
-            ind.style.top = (firstRect.top - 4) + 'px';
-            ind.style.transform = 'none';
-          } else {
-            ind.style.top = '50%';
-            ind.style.transform = 'translateY(-50%)';
-          }
-        }
-      }
-    }, { passive: true });
-
-    // Init indicateur au chargement de la galerie
-    document.addEventListener('galerie-chargee', () => {
-      window.dispatchEvent(new Event('scroll'));
-    });
-  </script>
   <script src="nav.js"></script>
   <script src="lang.js"></script>
+  <script src="caps.js"></script>
+  <script>
+    // Sélecteur de langue sur la landing — sans déclencher la navigation
+    (function () {
+      const boutons = document.querySelectorAll('#lang-home .lang-btn');
+      const VIOLET = '#4d2882';
+      const BLEU   = '#e2f2fb';
+
+      function refletColor() {
+        const lang = (window.getLang && window.getLang()) || 'fr';
+        boutons.forEach(b => {
+          b.style.color = b.dataset.lang === lang ? VIOLET : BLEU;
+        });
+      }
+
+      boutons.forEach(btn => {
+        // Empêcher le clic de remonter au body (qui ferait avancer/changer de page)
+        ['click', 'mousedown', 'mouseup'].forEach(evt =>
+          btn.addEventListener(evt, e => e.stopPropagation())
+        );
+        btn.addEventListener('click', () => {
+          // lang.js applique déjà la langue ; on met juste à jour la couleur
+          setTimeout(refletColor, 0);
+        });
+      });
+
+      // Couleur initiale selon la langue mémorisée
+      refletColor();
+      document.addEventListener('langchange', refletColor);
+    })();
+  </script>
+  <script>
+    // ── Navigation écrans ─────────────────────────────────────────────────────
+    const fade   = document.getElementById('fade');
+    const ecran1 = document.getElementById('ecran-1');
+    const ecran2 = document.getElementById('ecran-2');
+    let etape = 1;
+    let cooldown = false;
+
+    function avancer() {
+      if (cooldown) return;
+      cooldown = true;
+      if (etape === 1) {
+        ecran1.classList.add('cache');
+        ecran2.classList.add('visible');
+        etape = 2;
+        setTimeout(() => { cooldown = false; }, 600);
+      } else if (etape === 2) {
+        // Violet d'abord
+        fade.classList.add('actif');
+        document.body.style.background = '#4d2882';
+        // Mettre à jour theme-color pour la barre système iOS
+        const themeMeta = document.querySelector('meta[name="theme-color"]');
+        if (themeMeta) themeMeta.content = '#4d2882';
+        etape = 3;
+        // Puis transition vers bleu avant navigation
+        setTimeout(() => {
+          fade.style.background = '#e2f2fb';
+          document.body.style.background = '#e2f2fb';
+          if (themeMeta) themeMeta.content = '#e2f2fb';
+        }, 400);
+        setTimeout(() => { window.location.href = 'archive.html'; }, 800);
+      }
+    }
+
+    document.body.addEventListener('click', avancer);
+
+    window.addEventListener('wheel', (e) => {
+      if (e.deltaY > 30) avancer();
+    }, { passive: true });
+
+    let touchStartY = 0;
+    window.addEventListener('touchstart', (e) => {
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    window.addEventListener('touchend', (e) => {
+      if (touchStartY - e.changedTouches[0].clientY > 40) avancer();
+    }, { passive: true });
+  </script>
 </body>
 </html>

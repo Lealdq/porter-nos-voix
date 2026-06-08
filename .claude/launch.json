@@ -4,7 +4,7 @@
     {
       "name": "site-pancartes",
       "runtimeExecutable": "ruby",
-      "runtimeArgs": ["/tmp/site-pancartes/serve.rb"],
+      "runtimeArgs": ["/tmp/serve.rb"],
       "port": 8787
     }
   ]
