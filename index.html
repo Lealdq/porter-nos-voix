@@ -255,17 +255,31 @@
       // Déjà vu cette session → supprimer immédiatement sans animation
       splashOverlay && splashOverlay.remove();
     } else {
-      // Première visite → montrer le splash, disparaît au clic d'un lien nav
+      // Première visite → montrer le splash
+      // Disparaît au clic sur un lien nav, sur le splash lui-même, ou au scroll
+      function fermerSplash() {
+        sessionStorage.setItem('splash-vu', '1');
+        if (splashOverlay) {
+          splashOverlay.classList.add('disparait');
+          splashOverlay.addEventListener('transitionend', () => splashOverlay.remove(), { once: true });
+        }
+      }
+
       document.querySelectorAll('.site-nav a').forEach(link => {
         link.addEventListener('click', function(e) {
           if (link.classList.contains('active')) e.preventDefault();
-          sessionStorage.setItem('splash-vu', '1');
-          if (splashOverlay) {
-            splashOverlay.classList.add('disparait');
-            splashOverlay.addEventListener('transitionend', () => splashOverlay.remove(), { once: true });
-          }
+          fermerSplash();
         });
       });
+
+      // Tap/clic sur le splash lui-même (pratique sur mobile)
+      if (splashOverlay) {
+        splashOverlay.addEventListener('click', fermerSplash);
+        splashOverlay.addEventListener('touchstart', fermerSplash, { passive: true });
+      }
+
+      // Scroll : fermer le splash dès que l'utilisateur commence à défiler
+      window.addEventListener('scroll', fermerSplash, { once: true, passive: true });
     }
   </script>
 </body>
