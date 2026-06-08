@@ -9,12 +9,10 @@
    2. Entre lea94120@icloud.com → reçois ta clé par mail
    3. Remplace VOTRE_CLE_WEB3FORMS ci-dessous par ta clé             */
 (function () {
-  const WEB3FORMS_KEY = "a3c7c9bb-332c-4987-9086-00128756eac0";
-
   const IS_LOCAL = location.hostname === "localhost" || location.hostname === "127.0.0.1";
   const ENDPOINT = IS_LOCAL
     ? "http://localhost:8787/api/soumettre"
-    : "https://api.web3forms.com/submit";
+    : "https://formspree.io/f/xdavgrdd";
 
   const form   = document.getElementById("formulaire-soumission");
   if (!form) return;
@@ -63,22 +61,7 @@
 
     if (!ville || !pays || !annee || !photo) { montrer(erreur, T.champs()); return; }
 
-    // En ligne : vérifier que la clé Web3Forms est configurée
-    if (!IS_LOCAL && WEB3FORMS_KEY === "VOTRE_CLE_WEB3FORMS") {
-      montrer(erreur, T.cle()); return;
-    }
-
     const data = new FormData(form);
-
-    // Champs supplémentaires pour Web3Forms (ignorés par le serveur local)
-    if (!IS_LOCAL) {
-      const themes = [...form.querySelectorAll('input[name="themes"]:checked')].map(c => c.value);
-      data.append("access_key",  WEB3FORMS_KEY);
-      data.append("subject",     "Nouvelle pancarte — porter nos voix");
-      data.append("from_name",   "Porter nos voix");
-      data.append("botcheck",    "");
-      data.append("thèmes",      themes.join(", "));
-    }
 
     const labelOrig = btn.textContent;
     btn.disabled    = true;
