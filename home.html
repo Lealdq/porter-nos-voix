@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#e8000d">
   <title>porter nos voix</title>
   <link rel="stylesheet" href="style.css?v=20">
   <style>
@@ -167,10 +168,16 @@
       } else if (etape === 2) {
         // Violet d'abord
         fade.classList.add('actif');
+        document.body.style.background = '#4d2882';
+        // Mettre à jour theme-color pour la barre système iOS
+        const themeMeta = document.querySelector('meta[name="theme-color"]');
+        if (themeMeta) themeMeta.content = '#4d2882';
         etape = 3;
         // Puis transition vers bleu avant navigation
         setTimeout(() => {
           fade.style.background = '#e2f2fb';
+          document.body.style.background = '#e2f2fb';
+          if (themeMeta) themeMeta.content = '#e2f2fb';
         }, 400);
         setTimeout(() => { window.location.href = 'index.html'; }, 800);
       }
