@@ -9,7 +9,7 @@
    2. Entre lea94120@icloud.com → reçois ta clé par mail
    3. Remplace VOTRE_CLE_WEB3FORMS ci-dessous par ta clé             */
 (function () {
-  const WEB3FORMS_KEY = "VOTRE_CLE_WEB3FORMS";
+  const WEB3FORMS_KEY = "a3c7c9bb-332c-4987-9086-00128756eac0";
 
   const IS_LOCAL = location.hostname === "localhost" || location.hostname === "127.0.0.1";
   const ENDPOINT = IS_LOCAL
