@@ -12,7 +12,7 @@
   const IS_LOCAL = location.hostname === "localhost" || location.hostname === "127.0.0.1";
   const ENDPOINT = IS_LOCAL
     ? "http://localhost:8787/api/soumettre"
-    : "https://formspree.io/f/xdavgrdd";
+    : "/";
 
   const form   = document.getElementById("formulaire-soumission");
   if (!form) return;
@@ -62,6 +62,9 @@
     if (!ville || !pays || !annee || !photo) { montrer(erreur, T.champs()); return; }
 
     const data = new FormData(form);
+
+    // Netlify Forms nécessite le nom du formulaire
+    if (!IS_LOCAL) data.append("form-name", "contribution");
 
     const labelOrig = btn.textContent;
     btn.disabled    = true;

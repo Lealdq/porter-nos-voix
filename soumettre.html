@@ -269,7 +269,9 @@
       <div id="message-succes" class="message-succes" role="alert" aria-live="assertive"></div>
       <div id="message-erreur" class="message-erreur" role="alert" aria-live="assertive"></div>
 
-      <form id="formulaire-soumission" novalidate>
+      <form id="formulaire-soumission" name="contribution" netlify netlify-honeypot="bot-field" novalidate>
+        <input type="hidden" name="form-name" value="contribution">
+        <input type="hidden" name="bot-field" style="display:none">
 
         <!-- 01 · la pancarte -->
         <div class="contribuer-section">
