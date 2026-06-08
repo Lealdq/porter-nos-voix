@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" width="240" height="160">
+  <rect width="240" height="160" fill="#e2f2fb"/>
+  <rect width="240" height="20" fill="#e8000d"/>
+  <text x="120" y="14" font-family="sans-serif" font-size="7" fill="#e2f2fb" text-anchor="middle" letter-spacing="1">PORTER NOS VOIX</text>
+  <!-- section 01 -->
+  <text x="12" y="34" font-family="sans-serif" font-size="5" fill="#4d2882" opacity=".4">01</text>
+  <rect x="28" y="28" width="80" height="7" rx="1" fill="#e8000d" opacity=".15"/>
+  <rect x="28" y="38" width="180" height="3" rx="1" fill="#4d2882" opacity=".25"/>
+  <rect x="28" y="43" width="160" height="3" rx="1" fill="#4d2882" opacity=".25"/>
+  <rect x="28" y="48" width="170" height="3" rx="1" fill="#4d2882" opacity=".25"/>
+  <rect x="8" y="57" width="224" height="0.5" fill="#e8000d" opacity=".25"/>
+  <!-- section 02 -->
+  <text x="12" y="68" font-family="sans-serif" font-size="5" fill="#4d2882" opacity=".4">02</text>
+  <rect x="28" y="62" width="60" height="7" rx="1" fill="#e8000d" opacity=".15"/>
+  <rect x="28" y="72" width="180" height="3" rx="1" fill="#4d2882" opacity=".25"/>
+  <rect x="28" y="77" width="155" height="3" rx="1" fill="#4d2882" opacity=".25"/>
+  <rect x="28" y="82" width="165" height="3" rx="1" fill="#4d2882" opacity=".25"/>
+  <rect x="8" y="91" width="224" height="0.5" fill="#e8000d" opacity=".25"/>
+  <!-- section 03 -->
+  <text x="12" y="102" font-family="sans-serif" font-size="5" fill="#4d2882" opacity=".4">03</text>
+  <rect x="28" y="96" width="70" height="7" rx="1" fill="#e8000d" opacity=".15"/>
+  <rect x="28" y="106" width="180" height="3" rx="1" fill="#4d2882" opacity=".25"/>
+  <rect x="28" y="111" width="140" height="3" rx="1" fill="#4d2882" opacity=".25"/>
+  <rect x="28" y="120" width="80" height="6" rx="1" fill="none" stroke="#e8000d" stroke-width="0.6" opacity=".6"/>
+</svg>

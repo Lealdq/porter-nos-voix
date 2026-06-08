@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>nuage de mots — porter nos voix</title>
+  <link rel="stylesheet" href="style.css?v=20">
+  <style>
+    .page-nuage {
+      padding: 2.5rem 0 5rem;
+    }
+
+    .nuage-intro {
+      font-size: 0.78rem;
+      color: var(--gris-texte);
+      margin-bottom: 3rem;
+      text-transform: lowercase;
+    }
+
+    #nuage-conteneur {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.6rem 1.2rem;
+      padding: 2rem 0;
+      line-height: 1.4;
+    }
+
+    .mot-nuage {
+      font-family: var(--font);
+      color: var(--noir);
+      text-transform: lowercase;
+      cursor: pointer;
+      transition: color 0.15s, opacity 0.15s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .mot-nuage:hover {
+      color: var(--violet);
+    }
+
+    /* Opacité décroissante selon le rang */
+    .mot-nuage[data-rang="0"] { opacity: 1; }
+    .mot-nuage[data-rang="1"] { opacity: 0.9; }
+    .mot-nuage[data-rang="2"] { opacity: 0.8; }
+    .mot-nuage[data-rang="3"] { opacity: 0.7; }
+    .mot-nuage[data-rang="4"] { opacity: 0.6; }
+    .mot-nuage[data-rang="5"] { opacity: 0.5; }
+  </style>
+</head>
+<body>
+
+      <header class="site-header" role="banner">
+    <div class="container">
+      <a href="home.html" class="site-logo">porter nos voix</a>
+      <nav class="site-nav">
+        <div class="nav-groupe">
+        <a href="index.html" data-i18n="nav-archive">archive</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="carte.html" data-i18n="nav-carte">carte</a>
+        <a href="explore.html" data-i18n="nav-explorer">explorer</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="temoignage.html" data-i18n="nav-temoignages">témoignage</a>
+        <a href="stats.html" data-i18n="nav-chiffres">chiffre</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="soumettre.html" data-i18n="nav-contribuer">contribuer</a>
+        <a href="apropos.html" data-i18n="nav-apropos">à propos</a>
+        </div>
+      </nav>
+      <div class="lang-switch">
+        <button class="lang-btn actif" data-lang="fr">FR</button>
+        <span class="lang-sep">/</span>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-nuage">
+    <div class="container">
+      <p class="nuage-intro">les mots les plus écrits sur les pancartes — cliquer pour explorer</p>
+      <div id="nuage-conteneur" aria-label="Nuage de mots des pancartes"></div>
+    </div>
+  </main>
+
+  <script>
+    const STOP = new Set(['le','la','les','de','du','des','et','en','un','une','que','qui','à','au','aux','je','il','elle','nous','vous','ils','elles','mon','ma','mes','ton','ta','tes','son','sa','ses','notre','votre','leur','leurs','ce','cet','cette','ces','par','pour','sur','sous','dans','avec','sans','plus','pas','non','ne','se','me','te','on','si','ou','mais','donc','or','ni','car','est','sont','ont','été','tout','tous','toutes','toute','même','aussi','très','bien','encore','quand','comme','dont','où','ça','là','the','of','and','to','is','in','for','you','we','my','your','not','no','are','be','has','have','this','that','all','who','they','it']);
+
+    function normaliser(str) {
+      return str.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    }
+
+    fetch('data/pancartes.json?v=' + Date.now())
+      .then(r => r.json())
+      .then(data => {
+        const freq = {};
+        data.forEach(p => {
+          if (!p.texte) return;
+          const mots = p.texte.toLowerCase()
+            .replace(/[^a-zàâäéèêëîïôùûüç\s\-]/g, ' ')
+            .split(/\s+/);
+          mots.forEach(m => {
+            m = m.replace(/^-+|-+$/g, '');
+            if (m.length > 2 && !STOP.has(m) && !STOP.has(normaliser(m))) {
+              freq[m] = (freq[m] || 0) + 1;
+            }
+          });
+        });
+
+        const sorted = Object.entries(freq)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 80);
+
+        const max = sorted[0][1];
+        const min = sorted[sorted.length - 1][1];
+
+        // Mélanger pour éviter l'ordre par taille
+        const melange = [...sorted].sort(() => Math.random() - 0.5);
+
+        const conteneur = document.getElementById('nuage-conteneur');
+        conteneur.innerHTML = melange.map(([mot, nb]) => {
+          const ratio  = (nb - min) / (max - min);
+          const taille = 0.75 + ratio * 3.5;   // de 0.75rem à 4.25rem
+          const rang   = Math.floor((1 - ratio) * 5);
+          return `<a
+            href="index.html?q=${encodeURIComponent(mot)}"
+            class="mot-nuage"
+            data-rang="${rang}"
+            style="font-size:${taille.toFixed(2)}rem"
+            title="${nb} pancarte${nb > 1 ? 's' : ''}"
+          >${mot}</a>`;
+        }).join('');
+      });
+  </script>
+  <script src="nav.js"></script>
+  <script src="lang.js"></script>
+</body>
+</html>

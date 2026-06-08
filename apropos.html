@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>à propos — porter nos voix</title>
+  <meta name="description" content="Présentation du projet archive de pancartes du 8 mars.">
+  <link rel="stylesheet" href="style.css?v=20">
+  <style>
+
+    /* ── Barre sticky ── */
+    .apropos-bar {
+      padding: 0.85rem 0;
+      background: var(--blanc);
+      position: sticky;
+      top: 38px;
+      z-index: 90;
+      transition: transform 0.3s ease;
+    }
+    .apropos-bar.masque { transform: translateY(-100%); }
+    .apropos-bar-inner {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .apropos-intro {
+      font-size: 0.78rem;
+      color: var(--gris-texte);
+      text-transform: lowercase;
+      letter-spacing: 0.01em;
+    }
+
+    /* ── Main ── */
+    .page-apropos-new { padding: 0 0 8rem; }
+
+    /* Aligner le contenu avec le header (comme les témoignages) */
+    .apropos-bar .container,
+    .page-apropos-new .container {
+      padding: 0 1rem;
+      max-width: 100%;
+      margin: 0;
+    }
+
+    /* ── Sections numérotées ── */
+    .apropos-section {
+      display: block;
+      padding: 3rem 0;
+    }
+
+    .apropos-num {
+      font-size: 0.72rem;
+      color: var(--gris-texte);
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+
+    .apropos-corps { min-width: 0; }
+
+    .apropos-section-titre {
+      font-size: 0.72rem;
+      color: var(--gris-texte);
+      text-transform: lowercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 1.75rem;
+      padding-bottom: 0.4rem;
+    }
+
+    /* ── Texte ── */
+    .apropos-slogan {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 400;
+      line-height: 1.1;
+      color: var(--noir);
+      margin-bottom: 2rem;
+      max-width: 620px;
+    }
+
+    .apropos-p {
+      font-size: 1rem;
+      line-height: 1.85;
+      color: var(--noir);
+      max-width: 580px;
+      margin-bottom: 1.25rem;
+    }
+    .apropos-p:last-child { margin-bottom: 0; }
+
+    .apropos-p a {
+      color: var(--noir);
+      border-bottom: 0.5px solid var(--noir);
+      text-decoration: none;
+      padding-bottom: 1px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .apropos-p a:hover { color: var(--violet); border-color: var(--violet); }
+
+    /* ── Grille licences ── */
+    .apropos-grille {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem 3rem;
+      max-width: 580px;
+      margin-top: 0.5rem;
+    }
+
+    .licence-bloc { }
+
+    .licence-titre {
+      font-size: 0.72rem;
+      color: var(--gris-texte);
+      text-transform: lowercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.3rem;
+      padding-bottom: 0.3rem;
+    }
+
+    .licence-texte {
+      font-size: 0.85rem;
+      color: var(--noir);
+      line-height: 1.6;
+    }
+
+    /* ── Lien contribuer ── */
+    .apropos-cta {
+      display: inline-block;
+      margin-top: 1.5rem;
+      font-size: 0.82rem;
+      color: var(--noir);
+      border-bottom: 0.5px solid var(--noir);
+      text-decoration: none;
+      padding-bottom: 1px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .apropos-cta:hover { color: var(--violet); border-color: var(--violet); }
+
+  </style>
+</head>
+<body>
+
+    <header class="site-header" role="banner">
+    <div class="container">
+      <a href="home.html" class="site-logo">porter nos voix</a>
+      <nav class="site-nav">
+        <div class="nav-groupe">
+        <a href="index.html" data-i18n="nav-archive">archive</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="carte.html" data-i18n="nav-carte">carte</a>
+        <a href="explore.html" data-i18n="nav-explorer">explorer</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="temoignage.html" data-i18n="nav-temoignages">témoignage</a>
+        <a href="stats.html" data-i18n="nav-chiffres">chiffre</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="soumettre.html" data-i18n="nav-contribuer">contribuer</a>
+        <a href="apropos.html" class="active" aria-current="page" data-i18n="nav-apropos">à propos</a>
+        </div>
+      </nav>
+      <div class="lang-switch">
+        <button class="lang-btn actif" data-lang="fr">FR</button>
+        <span class="lang-sep">/</span>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Barre sticky -->
+  <div class="apropos-bar" id="apropos-bar">
+    <div class="container">
+      <div class="apropos-bar-inner">
+        <p class="apropos-intro" data-i18n="apropos-bar-intro">
+          archive participative de pancartes du 8 mars, journée internationale des droits des femmes et des minorités de genre
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <main class="page-apropos-new">
+    <div class="container">
+
+      <!-- 01 · le projet -->
+      <div class="apropos-section">
+        <span class="apropos-num">01</span>
+        <div class="apropos-corps">
+          <p class="apropos-section-titre" data-i18n="apropos-01-titre">le projet</p>
+          <p class="apropos-slogan" data-i18n="apropos-01-slogan">chaque pancarte est un acte de langage collectif.</p>
+          <p class="apropos-p" data-i18n="apropos-01-p1">
+            cette archive rassemble des photographies de pancartes portées lors des manifestations du 8 mars
+            à travers le monde. les rassembler, les indexer, les rendre accessibles,
+            c'est préserver une mémoire militante qui disparaît souvent après le passage des cortèges.
+          </p>
+          <p class="apropos-p" data-i18n="apropos-01-p2">
+            les pancartes ne sont pas de simples slogans. elles condensent une colère, une revendication,
+            parfois de l'humour ou de la poésie. portées en foule, elles constituent un langage visuel
+            collectif qui mérite d'être documenté et étudié.
+          </p>
+        </div>
+      </div>
+
+      <!-- 02 · la démarche -->
+      <div class="apropos-section">
+        <span class="apropos-num">02</span>
+        <div class="apropos-corps">
+          <p class="apropos-section-titre" data-i18n="apropos-02-titre">la démarche</p>
+          <p class="apropos-p" data-i18n="apropos-02-p1">
+            porter nos voix est un projet de mémoire en communication visuelle. il s'inscrit dans une
+            réflexion sur les formes d'expression militante et la constitution de mémoires collectives
+            par l'image.
+          </p>
+          <p class="apropos-p" data-i18n="apropos-02-p2">
+            l'archive est organisée par année, ville et thème. chaque entrée renseigne le texte de la pancarte,
+            sa couleur dominante, sa langue, et son contexte de prise de vue. les données sont ouvertes
+            et téléchargeables.
+          </p>
+        </div>
+      </div>
+
+      <!-- 03 · contribuer -->
+      <div class="apropos-section">
+        <span class="apropos-num">03</span>
+        <div class="apropos-corps">
+          <p class="apropos-section-titre" data-i18n="apropos-03-titre">contribuer</p>
+          <p class="apropos-p" data-i18n="apropos-03-p1">
+            vous avez photographié des pancartes lors d'une manifestation du 8 mars ?
+            toutes les contributions sont les bienvenues, chaque image compte.
+          </p>
+          <p class="apropos-p" data-i18n="apropos-03-p2">
+            vous pouvez également partager un témoignage sur votre rapport aux manifestations :
+            ce que vous y portez, ce que vous en gardez.
+          </p>
+          <a href="soumettre.html" class="apropos-cta" data-i18n="apropos-03-cta">soumettre une pancarte →</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="nav.js"></script>
+  <script>
+    let dernierScroll = 0;
+    const bar = document.getElementById('apropos-bar');
+    window.addEventListener('scroll', () => {
+      const s = window.scrollY;
+      bar.classList.toggle('masque', s > dernierScroll && s > 60);
+      dernierScroll = s;
+    }, { passive: true });
+  </script>
+
+  <script src="lang.js"></script>
+  <script src="caps.js"></script>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>explorer — porter nos voix</title>
+  <link rel="stylesheet" href="style.css?v=20">
+  <style>
+    body { overflow: hidden; user-select: none; -webkit-user-select: none; }
+
+    #scene {
+      position: fixed;
+      inset: 0;
+      top: 38px;
+      overflow: hidden;
+      cursor: grab;
+    }
+    #scene.panning { cursor: grabbing; }
+
+    #canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 1000px;
+      height: 1000px;
+      transform-origin: 0 0;
+      overflow: visible;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .affiche {
+      position: absolute;
+      cursor: pointer;
+      user-select: none;
+      transition: box-shadow 0.15s;
+    }
+
+    .affiche img {
+      display: block;
+      width: 160px;
+      height: 200px;
+      object-fit: contain;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    .affiche:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.13); }
+    .affiche.en-transition { transition: left 0.6s cubic-bezier(.4,0,.2,1), top 0.6s cubic-bezier(.4,0,.2,1); }
+
+    /* Bloc coloré quand on est dézoomé (couleur dominante de la pancarte) */
+    .affiche-vide {
+      width: 160px;
+      height: 200px;
+      border-radius: 6px;
+    }
+
+    /* Étiquettes de ville sur le canvas */
+    .frise-label {
+      position: absolute;
+      font-family: var(--font);
+      font-size: 0.72rem;
+      color: var(--noir);
+      text-transform: lowercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .frise-label:hover { color: #4d2882; }
+
+    /* Bouton de mode */
+    #controles-bas {
+      position: fixed;
+      top: 65px;
+      left: 1rem;
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    #btn-vue {
+      background: var(--blanc);
+      border: none;
+      outline: none;
+      font-family: var(--font);
+      font-size: 0.72rem;
+      padding: 0.35rem 0;
+      cursor: pointer;
+      color: var(--noir);
+      transition: color 0.15s;
+      width: 9.5rem;
+      text-align: left;
+    }
+    #btn-vue:hover { color: #4d2882; }
+
+    #dd-annee {
+      position: fixed;
+      top: calc(38px + 0.75rem);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 500;
+    }
+    .annee-dropdown { position: relative; }
+    .annee-btn {
+      background: var(--blanc);
+      border: none;
+      outline: none;
+      font-family: var(--font);
+      font-size: 0.72rem;
+      padding: 0.35rem 0.75rem;
+      cursor: pointer;
+      color: var(--rouge, #e8000d);
+      transition: color 0.15s;
+      white-space: nowrap;
+    }
+    .annee-btn:hover { color: #4d2882; }
+    .annee-panel {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      background: var(--blanc);
+      flex-direction: column;
+      min-width: 100%;
+    }
+    .annee-dropdown.ouvert .annee-panel { display: flex; }
+    .annee-option {
+      font-family: var(--font);
+      font-size: 0.72rem;
+      padding: 0.2rem 0.75rem;
+      cursor: pointer;
+      color: var(--gris-texte);
+      opacity: 0.8;
+      transition: color 0.15s;
+      white-space: nowrap;
+    }
+    .annee-option:hover { color: #e8000d; opacity: 1; }
+    .annee-option.actif { color: var(--rouge, #e8000d); opacity: 1; }
+
+    .curseur-signe {
+      background: none;
+      border: none;
+      outline: none;
+      font-family: var(--font);
+      font-size: 0.82rem;
+      color: var(--noir);
+      cursor: pointer;
+      padding: 0 0.2rem;
+      line-height: 1;
+      transition: color 0.15s;
+    }
+    .curseur-signe:hover { color: #4d2882; }
+
+    #curseur-zoom {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 90px;
+      height: 10px;
+      background: transparent;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    #curseur-zoom::-webkit-slider-runnable-track {
+      height: 10px;
+      border: 0.5px solid #ccc;
+    }
+    #curseur-zoom::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 4px;
+      height: 10px;
+      border-radius: 0;
+      background: var(--noir);
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+
+      <header class="site-header" role="banner">
+    <div class="container">
+      <a href="home.html" class="site-logo">porter nos voix</a>
+      <nav class="site-nav">
+        <div class="nav-groupe">
+        <a href="index.html" data-i18n="nav-archive">archive</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="carte.html" data-i18n="nav-carte">carte</a>
+        <a href="explore.html" class="active" aria-current="page" data-i18n="nav-explorer">explorer</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="temoignage.html" data-i18n="nav-temoignages">témoignage</a>
+        <a href="stats.html" data-i18n="nav-chiffres">chiffre</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="soumettre.html" data-i18n="nav-contribuer">contribuer</a>
+        <a href="apropos.html" data-i18n="nav-apropos">à propos</a>
+        </div>
+      </nav>
+      <div class="lang-switch">
+        <button class="lang-btn actif" data-lang="fr">FR</button>
+        <span class="lang-sep">/</span>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <div id="scene">
+    <div id="canvas"></div>
+  </div>
+
+  <div id="controles-bas">
+    <button id="btn-vue">frise chronologique</button>
+    <div class="curseur-col-wrap">
+      <button class="curseur-signe" id="btn-zoom-moins" aria-label="Dézoomer">−</button>
+      <input type="range" id="curseur-zoom" min="0.15" max="1.5" step="0.01" value="0.18" aria-label="Zoom">
+      <button class="curseur-signe" id="btn-zoom-plus" aria-label="Zoomer">+</button>
+    </div>
+  </div>
+
+  <div id="dd-annee" class="annee-dropdown" style="display:none;">
+    <button id="btn-annee-dd" class="annee-btn" aria-haspopup="listbox" aria-expanded="false">— ▾</button>
+    <div id="dd-annee-panel" class="annee-panel" role="listbox"></div>
+  </div>
+
+  <div id="explore-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true"></div>
+
+  <script src="explore.js?v=18"></script>
+  <script src="nav.js"></script>
+  <script src="lang.js"></script>
+</body>
+</html>

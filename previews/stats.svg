@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" width="240" height="160">
+  <rect width="240" height="160" fill="#e2f2fb"/>
+  <rect width="240" height="20" fill="#e8000d"/>
+  <text x="120" y="14" font-family="sans-serif" font-size="7" fill="#e2f2fb" text-anchor="middle" letter-spacing="1">PORTER NOS VOIX</text>
+  <!-- grands chiffres -->
+  <text x="20"  y="38" font-family="sans-serif" font-size="14" fill="#e8000d" font-weight="300">808</text>
+  <text x="80"  y="38" font-family="sans-serif" font-size="14" fill="#e8000d" font-weight="300">7</text>
+  <text x="120" y="38" font-family="sans-serif" font-size="14" fill="#e8000d" font-weight="300">6</text>
+  <text x="160" y="38" font-family="sans-serif" font-size="14" fill="#e8000d" font-weight="300">4</text>
+  <text x="20"  y="46" font-family="sans-serif" font-size="5" fill="#4d2882" opacity=".6">pancartes</text>
+  <text x="78"  y="46" font-family="sans-serif" font-size="5" fill="#4d2882" opacity=".6">années</text>
+  <text x="118" y="46" font-family="sans-serif" font-size="5" fill="#4d2882" opacity=".6">villes</text>
+  <text x="158" y="46" font-family="sans-serif" font-size="5" fill="#4d2882" opacity=".6">pays</text>
+  <!-- barres années -->
+  <text x="12" y="62" font-family="sans-serif" font-size="5" fill="#4d2882" opacity=".5">2020</text>
+  <rect x="44" y="57" width="80" height="5" rx="1" fill="#e8000d" opacity=".6"/>
+  <text x="12" y="72" font-family="sans-serif" font-size="5" fill="#4d2882" opacity=".5">2021</text>
+  <rect x="44" y="67" width="75" height="5" rx="1" fill="#e8000d" opacity=".6"/>
+  <text x="12" y="82" font-family="sans-serif" font-size="5" fill="#4d2882" opacity=".5">2022</text>
+  <rect x="44" y="77" width="72" height="5" rx="1" fill="#e8000d" opacity=".6"/>
+  <text x="12" y="92" font-family="sans-serif" font-size="5" fill="#4d2882" opacity=".5">2023</text>
+  <rect x="44" y="87" width="78" height="5" rx="1" fill="#e8000d" opacity=".6"/>
+  <text x="12" y="102" font-family="sans-serif" font-size="5" fill="#4d2882" opacity=".5">2024</text>
+  <rect x="44" y="97" width="82" height="5" rx="1" fill="#e8000d" opacity=".6"/>
+  <text x="12" y="112" font-family="sans-serif" font-size="5" fill="#4d2882" opacity=".5">2025</text>
+  <rect x="44" y="107" width="88" height="5" rx="1" fill="#e8000d" opacity=".6"/>
+  <text x="12" y="122" font-family="sans-serif" font-size="5" fill="#4d2882" opacity=".5">2026</text>
+  <rect x="44" y="117" width="110" height="5" rx="1" fill="#e8000d" opacity=".9"/>
+</svg>

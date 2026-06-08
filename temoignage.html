@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>témoignages — porter nos voix</title>
+  <meta name="description" content="Témoignages de femmes qui participent aux manifestations du 8 mars.">
+  <link rel="stylesheet" href="style.css?v=20">
+  <style>
+
+    /* ── Barre du haut ── */
+    .temoignages-bar {
+      
+      padding: 0.85rem 0;
+      background: var(--blanc);
+      position: sticky;
+      top: 38px;
+      z-index: 90;
+      transition: transform 0.3s ease;
+    }
+    .temoignages-bar.masque { transform: translateY(-100%); }
+
+    .temoignages-bar-inner {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .temoignages-intro {
+      font-size: 0.78rem;
+      color: var(--gris-texte);
+      text-transform: lowercase;
+      letter-spacing: 0.01em;
+    }
+
+    #temoignages-count {
+      font-size: 0.72rem;
+      color: var(--gris-texte);
+      flex-shrink: 0;
+    }
+
+    /* Aligner le contenu avec le header */
+    .temoignages-bar .container,
+    .temoignages-section .container {
+      padding: 0 1rem;
+      max-width: 100%;
+      margin: 0;
+    }
+
+    /* ── Grille principale ── */
+    .temoignages-section {
+      padding: 0 0 6rem;
+    }
+
+    /* ── Article ── */
+    .temoignage {
+      display: block;
+      padding: 1.25rem 0;
+    }
+
+    .temoignage-num {
+      font-size: 0.72rem;
+      color: var(--gris-texte);
+      display: inline;
+      margin-right: 0.75rem;
+    }
+
+    .temoignage-corps { min-width: 0; }
+
+    .temoignage-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.72rem;
+      margin-bottom: 1.5rem;
+      text-transform: lowercase;
+    }
+
+    .temoignage-prenom {
+      color: var(--noir);
+      font-size: 0.85rem;
+      text-transform: capitalize;
+    }
+
+    .temoignage-lien {
+      text-decoration: none;
+      border-bottom: 0.5px solid var(--noir);
+      padding-bottom: 1px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .temoignage-lien:hover { color: var(--violet); border-color: var(--violet); }
+
+    .temoignage-separateur { color: var(--gris-texte); }
+
+    .temoignage-contexte,
+    .temoignage-lieu { color: var(--gris-texte); }
+
+    /* ── Texte ── */
+    .temoignage-texte {
+      font-size: 1.25rem;
+      line-height: 1.85;
+      font-style: italic;
+      color: var(--noir);
+      margin-bottom: 1.25rem;
+    }
+
+    .temoignage-slogan {
+      font-size: clamp(2rem, 5vw, 3.8rem);
+      font-style: normal;
+      font-weight: 400;
+      line-height: 0.95;
+      text-transform: uppercase;
+      color: var(--noir);
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .temoignage-texte--long {
+      font-style: normal;
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: var(--noir);
+      margin-bottom: 1.1rem;
+      max-width: 580px;
+    }
+    .temoignage-texte--long:last-of-type { margin-bottom: 0; }
+
+    .temoignage-section-titre {
+      font-size: 0.72rem;
+      font-weight: 400;
+      text-transform: lowercase;
+      letter-spacing: 0.06em;
+      color: var(--gris-texte);
+      margin: 2rem 0 0.75rem;
+      
+      padding-bottom: 0.4rem;
+    }
+    .temoignage-section-titre:first-child { margin-top: 0; }
+
+    /* ── Boutons expand ── */
+    .btn-lire-suite,
+    .btn-refermer {
+      background: none;
+      border: none;
+      font-family: var(--font);
+      font-size: 0.75rem;
+      color: #6b3fa0;
+      padding: 0 0 1px 0;
+      cursor: pointer;
+      margin-top: 1.25rem;
+      display: inline-block;
+      transition: color 0.15s;
+      border-bottom: 0.5px solid #6b3fa0;
+      text-decoration: none;
+    }
+    .btn-lire-suite:hover,
+    .btn-refermer:hover {
+      color: var(--noir);
+      border-bottom-color: var(--noir);
+    }
+
+    .temoignage--expandable { cursor: pointer; }
+
+    .temoignage--expandable .temoignage-slogan {
+      transition: color 0.15s;
+    }
+    .temoignage--expandable:hover .temoignage-slogan {
+      color: #6b3fa0;
+    }
+
+    /* ── Vide ── */
+    .vide-message {
+      padding: 4rem 0;
+      color: var(--gris-texte);
+      font-size: 0.88rem;
+    }
+
+  </style>
+</head>
+<body>
+
+    <header class="site-header" role="banner">
+    <div class="container">
+      <a href="home.html" class="site-logo">porter nos voix</a>
+      <nav class="site-nav">
+        <div class="nav-groupe">
+        <a href="index.html" data-i18n="nav-archive">archive</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="carte.html" data-i18n="nav-carte">carte</a>
+        <a href="explore.html" data-i18n="nav-explorer">explorer</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="temoignage.html" class="active" aria-current="page" data-i18n="nav-temoignages">témoignage</a>
+        <a href="stats.html" data-i18n="nav-chiffres">chiffre</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="soumettre.html" data-i18n="nav-contribuer">contribuer</a>
+        <a href="apropos.html" data-i18n="nav-apropos">à propos</a>
+        </div>
+      </nav>
+      <div class="lang-switch">
+        <button class="lang-btn actif" data-lang="fr">FR</button>
+        <span class="lang-sep">/</span>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Barre sticky sous le header -->
+  <div class="temoignages-bar" id="temoignages-bar">
+    <div class="container">
+      <div class="temoignages-bar-inner">
+        <p class="temoignages-intro" data-i18n="temoignages-intro">
+          des femmes racontent — leur rapport aux manifestations du 8 mars, ce qu'elles y portent, ce qu'elles en gardent.
+        </p>
+        <span id="temoignages-count"></span>
+      </div>
+    </div>
+  </div>
+
+  <main class="temoignages-section">
+    <div class="container">
+      <div id="liste-temoignages" aria-live="polite"></div>
+    </div>
+  </main>
+
+  <script src="temoignage.js?v=5"></script>
+  <script src="nav.js"></script>
+  <script>
+    // Cacher la barre au scroll bas
+    let dernierScroll = 0;
+    const bar = document.getElementById('temoignages-bar');
+    window.addEventListener('scroll', () => {
+      const s = window.scrollY;
+      bar.classList.toggle('masque', s > dernierScroll && s > 60);
+      dernierScroll = s;
+    }, { passive: true });
+  </script>
+  <script src="lang.js"></script>
+  <script src="caps.js"></script>
+</body>
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>contribuer — porter nos voix</title>
+  <meta name="description" content="Contribuez à l'archive en soumettant la photo d'une pancarte du 8 mars.">
+  <link rel="stylesheet" href="style.css?v=20">
+  <style>
+
+    /* ── Barre sticky ── */
+    .contribuer-bar {
+      padding: 0.85rem 0;
+      background: var(--blanc);
+      position: sticky;
+      top: 38px;
+      z-index: 90;
+      transition: transform 0.3s ease;
+    }
+    .contribuer-bar.masque { transform: translateY(-100%); }
+    .contribuer-bar-inner {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .contribuer-intro {
+      font-size: 0.78rem;
+      color: var(--gris-texte);
+      text-transform: none;
+      letter-spacing: 0.01em;
+    }
+    .contribuer-note {
+      font-size: 0.72rem;
+      color: var(--gris-texte);
+      flex-shrink: 0;
+    }
+
+    /* ── Main ── */
+    .page-contribuer { padding: 0 0 7rem; }
+
+    /* Aligner le contenu avec le header (comme les témoignages) */
+    .contribuer-bar .container,
+    .page-contribuer .container {
+      padding: 0 1rem;
+      max-width: 100%;
+      margin: 0;
+    }
+
+    /* ── Section ── */
+    .contribuer-section {
+      display: block;
+      padding: 3rem 0;
+    }
+
+    .contribuer-num {
+      font-size: 0.72rem;
+      color: var(--gris-texte);
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+
+    .contribuer-corps { min-width: 0; }
+
+    .contribuer-section-titre {
+      font-size: 0.72rem;
+      color: var(--gris-texte);
+      text-transform: lowercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 1.75rem;
+      padding-bottom: 0.4rem;
+    }
+
+    /* ── Champs ── */
+    .champs-grille {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 2.5rem;
+    }
+    .champ { margin-bottom: 1.5rem; }
+    .champ.pleine { grid-column: 1 / -1; }
+    .champ label {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--gris-texte);
+      text-transform: lowercase;
+      margin-bottom: 0.35rem;
+    }
+    .champ input,
+    .champ select,
+    .champ textarea {
+      width: 100%;
+      border: none;
+      border-bottom: 0.5px solid #b0b0b0;
+      border-radius: 0;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      font-family: var(--font);
+      font-size: 0.95rem;
+      padding: 0.45rem 0;
+      background: transparent;
+      color: var(--noir);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .champ input:focus,
+    .champ select:focus,
+    .champ textarea:focus { border-bottom-color: #777; }
+    .champ textarea { min-height: 80px; resize: vertical; line-height: 1.6; }
+    .champ input::placeholder,
+    .champ textarea::placeholder { color: #bbb; font-size: 0.85rem; }
+    .requis { color: var(--noir); }
+
+    /* ── Tags thèmes ── */
+    .tags-themes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .tags-themes input[type="checkbox"] { display: none; }
+    .tags-themes label {
+      font-size: 0.72rem;
+      text-transform: lowercase;
+      padding: 0.2rem 0.6rem;
+      border: none;
+      color: var(--gris-texte);
+      cursor: pointer;
+      transition: color 0.15s;
+      margin: 0;
+    }
+    .tags-themes label:hover { color: var(--noir); }
+    .tags-themes input:checked + label {
+      color: var(--noir);
+    }
+
+    /* ── Zone dépôt ── */
+    .zone-depot {
+      border: 0.5px solid #ccc;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.15s;
+      position: relative;
+      max-width: 480px;
+    }
+    .zone-depot:hover { border-color: var(--noir); }
+    .zone-depot.drag-over { border-color: var(--noir); }
+    .zone-depot input[type="file"] {
+      position: absolute; inset: 0; opacity: 0;
+      cursor: pointer; width: 100%; height: 100%;
+    }
+    .depot-texte {
+      font-size: 0.75rem;
+      color: var(--gris-texte);
+      line-height: 1.7;
+      text-transform: lowercase;
+    }
+    .depot-label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--noir);
+      margin-bottom: 0.4rem;
+    }
+    .depot-formats {
+      font-size: 0.68rem;
+      color: #bbb;
+      margin-top: 0.3rem;
+    }
+    #apercu-photo {
+      display: none;
+      max-width: 100%;
+      max-height: 220px;
+      object-fit: contain;
+      margin: 1.25rem auto 0;
+    }
+
+    /* ── Messages ── */
+    .message-succes, .message-erreur {
+      display: none;
+      padding: 1rem 1.25rem;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    .message-succes { color: #166534; border-left: 2px solid #166534; }
+    .message-erreur { color: #991b1b; border-left: 2px solid #991b1b; }
+
+    /* ── Bouton ── */
+    .contribuer-submit {
+      display: block;
+      width: 100%;
+      max-width: 480px;
+      padding: 1rem;
+      background: var(--noir);
+      color: var(--blanc);
+      border: none;
+      font-family: var(--font);
+      font-size: 0.85rem;
+      text-transform: lowercase;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      margin-top: 0.5rem;
+    }
+    .contribuer-submit:hover { opacity: 0.82; }
+
+    .mention-legale {
+      font-size: 0.72rem;
+      color: var(--gris-texte);
+      margin-top: 1rem;
+      max-width: 480px;
+      line-height: 1.6;
+    }
+
+  </style>
+</head>
+<body>
+
+    <header class="site-header" role="banner">
+    <div class="container">
+      <a href="home.html" class="site-logo">porter nos voix</a>
+      <nav class="site-nav">
+        <div class="nav-groupe">
+        <a href="index.html" data-i18n="nav-archive">archive</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="carte.html" data-i18n="nav-carte">carte</a>
+        <a href="explore.html" data-i18n="nav-explorer">explorer</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="temoignage.html" data-i18n="nav-temoignages">témoignage</a>
+        <a href="stats.html" data-i18n="nav-chiffres">chiffre</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="soumettre.html" class="active" aria-current="page" data-i18n="nav-contribuer">contribuer</a>
+        <a href="apropos.html" data-i18n="nav-apropos">à propos</a>
+        </div>
+      </nav>
+      <div class="lang-switch">
+        <button class="lang-btn actif" data-lang="fr">FR</button>
+        <span class="lang-sep">/</span>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Barre sticky -->
+  <div class="contribuer-bar" id="contribuer-bar">
+    <div class="container">
+      <div class="contribuer-bar-inner">
+        <p class="contribuer-intro" data-i18n="contribuer-intro">
+          vous avez photographié une pancarte lors d'une manifestation du 8 mars ? Contribuez à l'archive.
+        </p>
+        <span class="contribuer-note" data-i18n="contribuer-bar-note">toutes les soumissions sont vérifiées avant publication</span>
+      </div>
+    </div>
+  </div>
+
+  <main class="page-contribuer">
+    <div class="container">
+
+      <div id="message-succes" class="message-succes" role="alert" aria-live="assertive"></div>
+      <div id="message-erreur" class="message-erreur" role="alert" aria-live="assertive"></div>
+
+      <form id="formulaire-soumission" novalidate>
+
+        <!-- 01 · la pancarte -->
+        <div class="contribuer-section">
+          <span class="contribuer-num">01</span>
+          <div class="contribuer-corps">
+            <p class="contribuer-section-titre" data-i18n="form-section-01">la pancarte</p>
+            <div class="champ pleine">
+              <label for="champ-texte"><span data-i18n="form-texte">texte de la pancarte</span> <span class="requis">*</span></label>
+              <input type="text" id="champ-texte" name="texte"
+                placeholder="ex : mon corps, mes règles" required autocomplete="off"
+                data-i18n-placeholder="form-texte-placeholder">
+            </div>
+            <div class="champ pleine" style="margin-top:0.25rem;">
+              <label data-i18n="form-themes-label">thèmes</label>
+              <div class="tags-themes" role="group" aria-label="Thèmes">
+                <input type="checkbox" class="theme-check" id="th-corps"      name="themes" value="corps"><label for="th-corps">corps</label>
+                <input type="checkbox" class="theme-check" id="th-autonomie"  name="themes" value="autonomie"><label for="th-autonomie">autonomie</label>
+                <input type="checkbox" class="theme-check" id="th-violences"  name="themes" value="violences"><label for="th-violences">violences</label>
+                <input type="checkbox" class="theme-check" id="th-feminisme"  name="themes" value="féminisme"><label for="th-feminisme">féminisme</label>
+                <input type="checkbox" class="theme-check" id="th-solidarite" name="themes" value="solidarité"><label for="th-solidarite">solidarité</label>
+                <input type="checkbox" class="theme-check" id="th-travail"    name="themes" value="travail"><label for="th-travail">travail</label>
+                <input type="checkbox" class="theme-check" id="th-patriarcat" name="themes" value="patriarcat"><label for="th-patriarcat">patriarcat</label>
+                <input type="checkbox" class="theme-check" id="th-resistance" name="themes" value="résistance"><label for="th-resistance">résistance</label>
+                <input type="checkbox" class="theme-check" id="th-avortement" name="themes" value="avortement"><label for="th-avortement">avortement</label>
+                <input type="checkbox" class="theme-check" id="th-egalite"    name="themes" value="égalité"><label for="th-egalite">égalité</label>
+                <input type="checkbox" class="theme-check" id="th-feminicide" name="themes" value="féminicide"><label for="th-feminicide">féminicide</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 02 · le contexte -->
+        <div class="contribuer-section">
+          <span class="contribuer-num">02</span>
+          <div class="contribuer-corps">
+            <p class="contribuer-section-titre" data-i18n="form-section-02">le contexte</p>
+            <div class="champs-grille">
+              <div class="champ">
+                <label for="champ-ville"><span data-i18n="form-ville">ville</span> <span class="requis">*</span></label>
+                <input type="text" id="champ-ville" name="ville" placeholder="ex : paris" required data-i18n-placeholder="form-ville-placeholder">
+              </div>
+              <div class="champ">
+                <label for="champ-pays"><span data-i18n="form-pays">pays</span> <span class="requis">*</span></label>
+                <input type="text" id="champ-pays" name="pays" placeholder="ex : france" required data-i18n-placeholder="form-pays-placeholder">
+              </div>
+              <div class="champ">
+                <label for="champ-annee"><span data-i18n="form-annee">année</span> <span class="requis">*</span></label>
+                <input type="number" id="champ-annee" name="annee" placeholder="ex : 2025" min="1970" max="2099" required data-i18n-placeholder="form-annee-placeholder">
+              </div>
+              <div class="champ">
+                <label for="champ-langue" data-i18n="form-langue-label">langue de la pancarte</label>
+                <select id="champ-langue" name="langue">
+                  <option value="fr">français</option>
+                  <option value="es">espagnol</option>
+                  <option value="en">anglais</option>
+                  <option value="it">italien</option>
+                  <option value="de">allemand</option>
+                  <option value="pt">portugais</option>
+                  <option value="ar">arabe</option>
+                  <option value="autre">autre</option>
+                </select>
+              </div>
+              <div class="champ pleine">
+                <label for="champ-description" data-i18n="form-description-label">contexte ou lieu précis (optionnel)</label>
+                <textarea id="champ-description" name="description"
+                  placeholder="ex : place de la République, lors du rassemblement principal."
+                  data-i18n-placeholder="form-description-placeholder"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 03 · la photo -->
+        <div class="contribuer-section">
+          <span class="contribuer-num">03</span>
+          <div class="contribuer-corps">
+            <p class="contribuer-section-titre" data-i18n="form-section-03">la photo</p>
+            <div class="zone-depot" id="zone-depot" role="button" aria-label="Zone de dépôt d'image">
+              <input type="file" id="champ-photo" name="photo"
+                accept="image/jpeg,image/png,image/webp" aria-label="Choisir une image">
+              <span class="depot-label" data-i18n="form-depot-label">glisser une image ou cliquer pour parcourir</span>
+              <p class="depot-formats">jpg · png · webp — max 10 mo</p>
+              <img id="apercu-photo" src="" alt="aperçu de la photo">
+            </div>
+          </div>
+        </div>
+
+        <!-- 04 · attribution -->
+        <div class="contribuer-section">
+          <span class="contribuer-num">04</span>
+          <div class="contribuer-corps">
+            <p class="contribuer-section-titre" data-i18n="form-section-04">attribution</p>
+            <div class="champ" style="max-width:300px;">
+              <label for="champ-photographe" data-i18n="form-photographe-label">nom ou pseudonyme</label>
+              <input type="text" id="champ-photographe" name="photographe"
+                placeholder="ex : marie d., ou anonyme" value="anonyme">
+            </div>
+            <p class="mention-legale" data-i18n="form-mention-legale">
+              en soumettant, vous confirmez être l'auteur·e de la photo ou disposer de l'autorisation de la diffuser sous licence libre.
+            </p>
+            <button type="submit" class="contribuer-submit" data-i18n="form-envoyer">envoyer →</button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </main>
+
+  <script src="js/submit.js"></script>
+  <script src="nav.js"></script>
+  <script>
+    // Cacher la barre au scroll bas
+    let dernierScroll = 0;
+    const bar = document.getElementById('contribuer-bar');
+    window.addEventListener('scroll', () => {
+      const s = window.scrollY;
+      bar.classList.toggle('masque', s > dernierScroll && s > 60);
+      dernierScroll = s;
+    }, { passive: true });
+
+    // Aperçu photo
+    const input = document.getElementById('champ-photo');
+    const apercu = document.getElementById('apercu-photo');
+    const depot = document.getElementById('zone-depot');
+
+    input.addEventListener('change', () => {
+      const f = input.files[0];
+      if (!f) return;
+      apercu.src = URL.createObjectURL(f);
+      apercu.style.display = 'block';
+    });
+    depot.addEventListener('dragover', e => { e.preventDefault(); depot.classList.add('drag-over'); });
+    depot.addEventListener('dragleave', () => depot.classList.remove('drag-over'));
+    depot.addEventListener('drop', e => {
+      e.preventDefault();
+      depot.classList.remove('drag-over');
+      const f = e.dataTransfer.files[0];
+      if (f) { input.files = e.dataTransfer.files; apercu.src = URL.createObjectURL(f); apercu.style.display = 'block'; }
+    });
+  </script>
+
+  <script src="lang.js"></script>
+  <script src="caps.js"></script>
+</body>
+</html>

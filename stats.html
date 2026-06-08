@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>chiffres — porter nos voix</title>
+  <link rel="stylesheet" href="style.css?v=20">
+  <style>
+    /* ── Barre sticky ── */
+    .stats-bar {
+      padding: 1rem 0;
+      background: var(--blanc);
+      position: sticky;
+      top: 38px;
+      z-index: 90;
+      transition: transform 0.3s ease;
+    }
+    .stats-bar.masque { transform: translateY(-100%); }
+    .stats-bar .container,
+    .page-stats .container {
+      padding: 0 1rem;
+      max-width: 100%;
+      margin: 0;
+    }
+    .stats-bar-inner {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .stats-intro {
+      font-size: 0.78rem;
+      color: var(--gris-texte);
+      text-transform: lowercase;
+      letter-spacing: 0.01em;
+    }
+    #stats-total-count {
+      font-size: 0.72rem;
+      color: var(--gris-texte);
+      flex-shrink: 0;
+    }
+
+    /* ── Page ── */
+    .page-stats { padding: 4rem 0 9rem; }
+
+    /* ── Hero éditorial ── */
+    .stats-eyebrow {
+      font-size: 0.78rem;
+      color: var(--gris-texte);
+      text-transform: lowercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1.75rem;
+    }
+    .stats-phrase {
+      font-size: clamp(1.8rem, 4.2vw, 3.6rem);
+      line-height: 1.12;
+      letter-spacing: -0.01em;
+      color: var(--violet);
+      margin-bottom: 6.5rem;
+      font-weight: 400;
+      display: flex;
+      flex-direction: column;
+      gap: 0.05em;
+    }
+    .stats-ligne {
+      display: grid;
+      grid-template-columns: 3ch 1fr;  /* nombre largeur fixe -> mots alignés */
+      column-gap: 0.5ch;
+    }
+    .stats-phrase b {
+      color: var(--noir);
+      font-weight: 400;
+      font-variant-numeric: tabular-nums;
+      text-align: left;
+    }
+
+    /* ── Titre de section ── */
+    .stats-section-titre {
+      font-size: 0.82rem;
+      color: var(--gris-texte);
+      text-transform: lowercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.4rem;
+    }
+    .stats-section-note {
+      font-size: 0.78rem;
+      color: var(--gris-texte);
+      max-width: 44ch;
+      line-height: 1.5;
+      margin-bottom: 3rem;
+    }
+
+    /* ── Le champ : mosaïque par année ── */
+    .champ {
+      display: flex;
+      align-items: flex-start;
+      gap: clamp(0.9rem, 2.6vw, 2.6rem);
+      flex-wrap: wrap;
+      margin-bottom: 6rem;
+    }
+    .champ-col {
+      cursor: pointer;
+      transition: opacity 0.25s ease, transform 0.5s cubic-bezier(.2,.7,.2,1), filter 0.2s;
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    .champ-col.entre { opacity: 1; transform: translateY(0); }
+    .champ.focus .champ-col:not(.active) { opacity: 0.28; }
+
+    .champ-annee-label {
+      font-size: 1.5rem;
+      color: var(--noir);
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      transition: color 0.15s;
+    }
+    .champ-col:hover .champ-annee-label,
+    .champ-col.active .champ-annee-label { color: var(--violet); }
+    .champ-annee-nb {
+      font-size: 0.72rem;
+      color: var(--gris-texte);
+      font-variant-numeric: tabular-nums;
+      margin: 0.3rem 0 0.9rem;
+    }
+    .champ-grille {
+      display: grid;
+      grid-template-columns: repeat(8, 14px);
+      grid-auto-rows: 14px;
+      gap: 3px;
+    }
+    .champ-cell {
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    /* Highlight au survol : les carrés grossissent -> indique qu'on peut cliquer */
+    .champ-col:hover .champ-cell {
+      transform: scale(1.22);
+      box-shadow: 0 1px 5px rgba(0,0,0,0.22);
+    }
+    .champ-col:hover .champ-grille { z-index: 2; }
+    .champ-col { position: relative; }
+
+    /* ── Légende couleurs ── */
+    .legende {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.9rem 2rem;
+      max-width: 60ch;
+    }
+    .legende-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--noir);
+      text-transform: lowercase;
+    }
+    .legende-pastille { width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0; }
+    .legende-nb { color: var(--gris-texte); font-variant-numeric: tabular-nums; }
+
+    /* ── Panneau détail (clic année) ── */
+    .stats-detail {
+      margin-bottom: 6rem;
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 0.45s ease, opacity 0.35s ease, margin 0.45s ease;
+    }
+    .stats-detail.ouvert {
+      max-height: 1600px;
+      opacity: 1;
+    }
+    .detail-titre {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 400;
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      color: var(--noir);
+      margin-bottom: 0.5rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .detail-sous-titre {
+      font-size: 0.85rem;
+      color: var(--gris-texte);
+      text-transform: lowercase;
+      margin-bottom: 3rem;
+    }
+    .detail-grille {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3rem 4rem;
+    }
+    .detail-bloc-titre {
+      font-size: 0.78rem;
+      color: var(--gris-texte);
+      text-transform: lowercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 1.4rem;
+    }
+    .detail-barre-ligne {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: baseline;
+      gap: 0.2rem 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .detail-barre-label {
+      font-size: 0.85rem;
+      color: var(--noir);
+      text-transform: lowercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    /* Ligne entière cliquable -> filtre / recherche dans l'archive */
+    a.detail-barre-lien {
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+    a.detail-barre-lien .detail-barre-label,
+    a.detail-barre-lien .detail-barre-fill {
+      transition: color 0.15s, background 0.15s, opacity 0.15s;
+    }
+    /* Highlight inversé : le texte rouge passe en violet, la barre violette passe en rouge */
+    a.detail-barre-lien:hover .detail-barre-label {
+      color: var(--violet);
+    }
+    a.detail-barre-lien:hover .detail-barre-fill {
+      background: var(--noir);
+    }
+    .detail-barre-pct {
+      font-size: 0.72rem;
+      color: var(--gris-texte);
+      font-variant-numeric: tabular-nums;
+    }
+    .detail-barre-track {
+      grid-column: 1 / -1;
+      height: 7px;
+      background: transparent;
+      position: relative;
+      margin-top: 0.35rem;
+    }
+    .detail-barre-fill {
+      position: absolute; left: 0; top: 0; bottom: 0;
+      background: var(--violet);
+      border-radius: 4px;
+      transition: width 0.6s cubic-bezier(.4,0,.2,1) var(--delay, 0ms);
+    }
+    .couleurs-liste { display: flex; flex-direction: column; gap: 0.9rem; }
+    .couleur-ligne {
+      display: grid;
+      grid-template-columns: 14px 1fr;
+      align-items: center;
+      gap: 0.5rem 0.7rem;
+    }
+    /* Couleurs cliquables -> filtre l'archive par couleur */
+    a.couleur-lien { text-decoration: none; color: inherit; cursor: pointer; transition: opacity 0.15s; }
+    a.couleur-lien:hover { opacity: 0.55; }
+    .couleur-pastille { width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0; }
+    .couleur-label { font-size: 0.85rem; color: var(--noir); text-transform: lowercase; }
+    .couleur-nb { font-size: 0.72rem; color: var(--gris-texte); font-variant-numeric: tabular-nums; }
+    .couleur-pct { font-size: 0.72rem; color: var(--gris-texte); font-variant-numeric: tabular-nums; min-width: 2.5rem; text-align: right; }
+    .couleur-track { grid-column: 2 / -1; height: 7px; background: transparent; margin-top: 0.3rem; position: relative; }
+    .couleur-fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; transition: width 0.6s cubic-bezier(.4,0,.2,1) var(--delay, 0ms); }
+
+    /* ── Responsive ── */
+    @media (max-width: 800px) {
+      .page-stats { padding: 2.5rem 0 6rem; }
+      .stats-phrase { margin-bottom: 4rem; }
+      .champ { gap: 1.2rem; margin-bottom: 4rem; }
+      .detail-grille { grid-template-columns: 1fr; gap: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+    <header class="site-header" role="banner">
+    <div class="container">
+      <a href="home.html" class="site-logo">porter nos voix</a>
+      <nav class="site-nav">
+        <div class="nav-groupe">
+        <a href="index.html" data-i18n="nav-archive">archive</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="carte.html" data-i18n="nav-carte">carte</a>
+        <a href="explore.html" data-i18n="nav-explorer">explorer</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="temoignage.html" data-i18n="nav-temoignages">témoignage</a>
+        <a href="stats.html" class="active" aria-current="page" data-i18n="nav-chiffres">chiffre</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="soumettre.html" data-i18n="nav-contribuer">contribuer</a>
+        <a href="apropos.html" data-i18n="nav-apropos">à propos</a>
+        </div>
+      </nav>
+      <div class="lang-switch">
+        <button class="lang-btn actif" data-lang="fr">FR</button>
+        <span class="lang-sep">/</span>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Barre sticky ── -->
+  <div class="stats-bar" id="stats-bar">
+    <div class="container">
+      <div class="stats-bar-inner">
+        <p class="stats-intro" data-i18n="stats-intro">
+          données de l'archive — pancartes féministes du 8 mars à travers le monde.
+        </p>
+        <span id="stats-total-count"></span>
+      </div>
+    </div>
+  </div>
+
+  <main class="page-stats">
+    <div class="container">
+
+      <p class="stats-eyebrow" id="stats-eyebrow" data-i18n="stats-eyebrow">une archive en expansion</p>
+      <h1 class="stats-phrase" id="stats-phrase"></h1>
+
+      <p class="stats-section-note" id="stats-mosaique-note" data-i18n="stats-mosaique">
+        Chaque carré représente une pancarte, classée par année et colorée selon sa couleur dominante. Cliquez sur une année pour la détailler.
+      </p>
+      <div class="champ" id="champ"></div>
+
+      <div class="stats-detail" id="stats-detail" aria-live="polite"></div>
+
+    </div>
+  </main>
+
+  <script>
+  const COULEURS_EXCLUES = new Set(["orange"]);
+
+  const COULEURS_CSS = {
+    rouge:  "#e8000d",
+    bleu:   "#3b6fd4",
+    vert:   "#16a34a",
+    noir:   "#1a1a1a",
+    blanc:  "#cccccc",
+    rose:   "#db2777",
+    violet: "#7c3aed",
+    jaune:  "#ca8a04",
+    gris:   "#6b7280",
+    marron: "#92400e",
+    multicolore: "linear-gradient(135deg,#e8000d,#eab308,#16a34a,#3b6fd4,#7c3aed)",
+  };
+  const ORDRE_COULEURS = ["rouge","rose","violet","bleu","vert","jaune","marron","noir","blanc","gris","multicolore"];
+
+  let TOUTES = [];
+  let anneeActive = null;
+
+  function g(key) { return window.getTrad ? window.getTrad(key) : key; }
+  function nomVille(v) { return window.tradVille ? window.tradVille(v) : v; }
+  function nomPays(v)  { return window.tradPays  ? window.tradPays(v)  : v; }
+  function nomLangue(code) {
+    const noms = {
+      fr: { fr:"français", en:"anglais", es:"espagnol", it:"italien", ar:"arabe", de:"allemand", pt:"portugais" },
+      en: { fr:"French", en:"English", es:"Spanish", it:"Italian", ar:"Arabic", de:"German", pt:"Portuguese" }
+    };
+    const lang = window.getLang ? window.getLang() : "fr";
+    return (noms[lang] && noms[lang][code]) || code;
+  }
+  function couleurCss(col) { return COULEURS_CSS[(col||"").toLowerCase()] || "#b9b9c8"; }
+
+  fetch("data/pancartes.json?v=" + Date.now())
+    .then(r => r.json())
+    .then(data => {
+      TOUTES = data;
+      majPhrase();
+      construireChamp();
+
+      const countEl = document.getElementById("stats-total-count");
+      if (countEl) countEl.textContent = data.length + " " + g("stats-label-pancartes");
+    });
+
+  /* ── Phrase éditoriale ── */
+  function majPhrase() {
+    const total  = TOUTES.length;
+    const villes = new Set(TOUTES.map(p => p.ville).filter(Boolean)).size;
+    const pays   = new Set(TOUTES.map(p => p.pays).filter(Boolean)).size;
+    const annees = new Set(TOUTES.map(p => p.annee).filter(Boolean)).size;
+    const lang = window.getLang ? window.getLang() : "fr";
+
+    const lignes = lang === "en"
+      ? [[total, "signs"], [villes, "cities"], [pays, "countries"], [annees, "years of mobilisation"]]
+      : [[total, "pancartes"], [villes, "villes"], [pays, "pays"], [annees, "années de mobilisation"]];
+    const el = document.getElementById("stats-phrase");
+    if (el) el.innerHTML = lignes
+      .map(([n, label]) => `<span class="stats-ligne"><b>${n}</b><span>${label}</span></span>`)
+      .join("");
+  }
+
+  /* ── Mosaïque ── */
+  function construireChamp() {
+    const parAnnee = {};
+    TOUTES.forEach(p => {
+      if (!p.annee) return;
+      (parAnnee[p.annee] = parAnnee[p.annee] || []).push(p);
+    });
+    const annees = Object.keys(parAnnee).map(Number).sort((a, b) => a - b);
+
+    const champ = document.getElementById("champ");
+    champ.innerHTML = annees.map(annee => {
+      const liste = parAnnee[annee].slice().sort((a, b) => {
+        const ia = ORDRE_COULEURS.indexOf((a.couleur||"").toLowerCase());
+        const ib = ORDRE_COULEURS.indexOf((b.couleur||"").toLowerCase());
+        return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+      });
+      const cells = liste.map(p =>
+        `<span class="champ-cell" style="background:${couleurCss(p.couleur)}" title="${annee} · ${(p.couleur||"").toLowerCase()}"></span>`
+      ).join("");
+      return `
+        <div class="champ-col" data-annee="${annee}" role="button" tabindex="0" aria-label="${annee} : ${liste.length}">
+          <div class="champ-annee-label">${annee}</div>
+          <div class="champ-annee-nb">${liste.length}</div>
+          <div class="champ-grille">${cells}</div>
+        </div>`;
+    }).join("");
+
+    // Entrée en cascade
+    const cols = [...champ.querySelectorAll(".champ-col")];
+    cols.forEach((col, i) => setTimeout(() => col.classList.add("entre"), 80 + i * 90));
+
+    champ.addEventListener("click", e => {
+      const col = e.target.closest(".champ-col");
+      if (col) toggleAnnee(+col.dataset.annee);
+    });
+    champ.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.target.click(); }
+    });
+  }
+
+  function toggleAnnee(annee) {
+    const champ = document.getElementById("champ");
+    const detail = document.getElementById("stats-detail");
+    if (annee === anneeActive) {
+      anneeActive = null;
+      champ.classList.remove("focus");
+      champ.querySelectorAll(".champ-col").forEach(c => c.classList.remove("active"));
+      detail.classList.remove("ouvert");
+      return;
+    }
+    anneeActive = annee;
+    champ.classList.add("focus");
+    champ.querySelectorAll(".champ-col").forEach(c => c.classList.toggle("active", +c.dataset.annee === annee));
+    afficherDetail(annee);
+    // Défiler vers le panneau de détail
+    setTimeout(() => {
+      const y = detail.getBoundingClientRect().top + window.scrollY - 110;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }, 120);
+  }
+
+
+  /* ── Helpers data ── */
+  function compter(liste, champ) {
+    const map = {};
+    liste.forEach(p => { const v = p[champ]; if (v) map[v] = (map[v] || 0) + 1; });
+    return Object.entries(map).sort((a, b) => b[1] - a[1]);
+  }
+
+  const STOP = new Set(['le','la','les','de','du','des','et','en','un','une','que','qui','à','au','aux','je','il','elle','nous','vous','ils','elles','mon','ma','mes','ton','ta','tes','son','sa','ses','nos','vos','notre','votre','leur','leurs','ce','cet','cette','ces','par','pour','sur','sous','dans','avec','sans','plus','pas','non','ne','se','me','te','on','si','ou','mais','donc','or','ni','car','est','sont','ont','été','être','suis','es','sommes','êtes','ai','as','avons','avez','fais','fait','faire','font','vais','vas','va','vont','peut','plus','moins','trop','tout','tous','toutes','toute','même','aussi','très','bien','encore','quand','comme','dont','où','ça','cela','là','ici','y','en','des','aux','mars','ans','an','huit','mois','jour','jours','fois','el','las','los','una','unas','unos','del','con','por','para','mi','mis','su','sus','lo','ya','muy','más','que','las','the','of','and','to','is','in','for','you','we','my','your','our','not','no','are','be','been','has','have','this','that','all','who','they','it','its','can','will','c','j','s','n','m','l','d']);
+
+  function normaliser(str) { return str.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
+
+  function motsCles(liste, n = 12) {
+    const freq = {};
+    liste.forEach(p => {
+      if (!p.texte) return;
+      p.texte.toLowerCase().replace(/[^a-zàâäéèêëîïôùûüç'\s-]/g, ' ').split(/[\s\-']+/).forEach(m => {
+        m = m.replace(/^'+|'+$/g, '');
+        const norm = normaliser(m);
+        if (m.length > 2 && !STOP.has(m) && !STOP.has(norm)) freq[m] = (freq[m] || 0) + 1;
+      });
+    });
+    return Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, n);
+  }
+
+  function formatPct(nb, total) {
+    const v = nb / total * 100;
+    return v < 1 ? v.toFixed(1) + "%" : Math.round(v) + "%";
+  }
+
+  function barreLignes(entries, total, cle) {
+    if (!entries || !entries.length)
+      return `<p style="font-size:0.72rem;color:var(--gris-texte);font-style:italic;">${g("stats-no-data")}</p>`;
+    const max = Math.max(...entries.map(([, n]) => n)) || 1;
+    return entries.slice(0, 8).map(([label, nb, raw], i) => {
+      const txt = String(label).toLowerCase();
+      const val = (raw !== undefined && raw !== null) ? raw : label;
+      const href = cle === "q" ? `index.html?q=${encodeURIComponent(txt)}`
+                 : cle ? `index.html?${cle}=${encodeURIComponent(val)}`
+                 : null;
+      const inner = `
+        <span class="detail-barre-label">${txt}</span>
+        <span class="detail-barre-pct">${formatPct(nb, total)}</span>
+        <div class="detail-barre-track">
+          <div class="detail-barre-fill" style="width:0%;--delay:${i * 40}ms" data-w="${(nb / max * 100).toFixed(1)}"></div>
+        </div>`;
+      return href
+        ? `<a class="detail-barre-ligne detail-barre-lien" href="${href}">${inner}</a>`
+        : `<div class="detail-barre-ligne">${inner}</div>`;
+    }).join("");
+  }
+
+  /* ── Détail année ── */
+  function afficherDetail(annee) {
+    const sous = TOUTES.filter(p => p.annee === annee);
+    const nb = sous.length;
+    const cats     = compter(sous, "categorie");                                   // [categorie, n]
+    const couleurs = compter(sous, "couleur").filter(([c]) => !COULEURS_EXCLUES.has(c.toLowerCase()));
+    const villes   = compter(sous, "ville").map(([v, n]) => [nomVille(v), n, v]);  // [affichage, n, valeur brute]
+    const langues  = compter(sous, "langue").map(([c, n]) => [nomLangue(c), n, c]);
+
+    const couleursHtml = couleurs.slice(0, 8).map(([col, n], i) => `
+      <a class="couleur-ligne couleur-lien" href="index.html?couleur=${encodeURIComponent(col)}">
+        <span class="couleur-pastille" style="background:${couleurCss(col)}"></span>
+        <span class="couleur-pct">${formatPct(n, nb)}</span>
+        <div class="couleur-track">
+          <div class="couleur-fill" style="width:0%;background:${couleurCss(col).startsWith('linear') ? 'var(--violet)' : couleurCss(col)};--delay:${i * 40}ms" data-w="${(n / couleurs[0][1] * 100).toFixed(1)}"></div>
+        </div>
+      </a>`).join("");
+
+    const sousLabel = nb > 1 ? `${nb} ${g("stats-label-pancartes")}` : `1 ${g("stats-label-pancartes").replace(/s$/, "")}`;
+
+    const detail = document.getElementById("stats-detail");
+    detail.innerHTML = `
+      <div class="detail-titre">${annee}</div>
+      <div class="detail-sous-titre">${sousLabel}</div>
+      <div class="detail-grille">
+        <div><p class="detail-bloc-titre">${g("stats-detail-themes")}</p>${barreLignes(cats, nb, "categorie")}</div>
+        <div><p class="detail-bloc-titre">${g("stats-detail-couleurs")}</p><div class="couleurs-liste">${couleursHtml}</div></div>
+        <div><p class="detail-bloc-titre">${g("stats-detail-villes")}</p>${barreLignes(villes, nb, "ville")}</div>
+        <div><p class="detail-bloc-titre">${g("stats-detail-langues")}</p>${barreLignes(langues, nb, "langue")}</div>
+        <div><p class="detail-bloc-titre">${g("stats-detail-mots")}</p>${barreLignes(motsCles(sous, 8), nb, "q")}</div>
+      </div>`;
+    detail.classList.add("ouvert");
+    animerBarres();
+  }
+
+  function animerBarres() {
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      document.querySelectorAll("#stats-detail .detail-barre-fill, #stats-detail .couleur-fill").forEach(el => {
+        el.style.width = el.dataset.w + "%";
+      });
+    }));
+  }
+
+  /* ── Langue ── */
+  document.addEventListener("langchange", () => {
+    if (!TOUTES.length) return;
+    majPhrase();
+    const countEl = document.getElementById("stats-total-count");
+    if (countEl) countEl.textContent = TOUTES.length + " " + g("stats-label-pancartes");
+    if (anneeActive !== null) afficherDetail(anneeActive);
+  });
+  </script>
+  <script src="nav.js"></script>
+  <script src="lang.js"></script>
+  <script src="caps.js"></script>
+  <script>
+    // Cacher la barre au scroll bas
+    let dernierScrollStats = 0;
+    const statsBar = document.getElementById('stats-bar');
+    window.addEventListener('scroll', () => {
+      const s = window.scrollY;
+      if (s > 60) statsBar.classList.toggle('masque', s > dernierScrollStats);
+      else statsBar.classList.remove('masque');
+      dernierScrollStats = s;
+    }, { passive: true });
+  </script>
+</body>
+</html>

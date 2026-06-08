@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>carte — porter nos voix</title>
+  <meta name="description" content="Carte mondiale des pancartes féministes du 8 mars.">
+  <link rel="stylesheet" href="style.css?v=20">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    body { overflow: hidden; background: transparent; }
+
+    .site-header {
+      position: fixed;
+      width: 100%;
+      background: transparent !important;
+    }
+
+    #carte-wrap {
+      display: flex;
+      height: 100vh;
+      position: relative;
+    }
+
+    #map {
+      flex: 1;
+      z-index: 1;
+      background: #e2f2fb;
+    }
+
+    #map-overlay { display: none; }
+
+    /* Marqueurs au-dessus de l'overlay */
+    .leaflet-marker-pane,
+    .leaflet-overlay-pane,
+    .leaflet-popup-pane {
+      z-index: 600 !important;
+    }
+
+    /* Marqueur personnalisé */
+    .marqueur-ville {
+      background: var(--noir);
+      color: #e2f2fb;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font);
+      font-size: 0.65rem;
+      cursor: pointer;
+      transition: background 0.18s, transform 0.15s;
+    }
+    .marqueur-ville:hover { background: #4d2882; transform: scale(1.1); }
+
+    /* Panneau latéral */
+    #panneau {
+      width: 380px;
+      flex-shrink: 0;
+      background: #e2f2fb;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.25s ease;
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 200;
+      overflow: hidden;
+    }
+    #panneau.visible { transform: translateX(0); }
+
+    #panneau-header {
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    #panneau-titre {
+      font-size: 0.85rem;
+      text-transform: capitalize;
+    }
+
+    #panneau-fermer {
+      background: none;
+      border: none;
+      font-family: var(--font);
+      font-size: 0.78rem;
+      color: var(--gris-texte);
+      cursor: pointer;
+      padding: 0;
+    }
+    #panneau-fermer:hover { color: #4d2882; }
+
+    #panneau-grille {
+      overflow-y: auto;
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-content: start;
+    }
+
+    .panneau-carte {
+      padding: 1rem;
+      cursor: pointer;
+      transition: opacity 0.12s;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .panneau-carte:hover { opacity: 0.7; }
+
+    .vignette-wrap {
+      position: relative;
+    }
+
+    .panneau-carte img {
+      width: 100%;
+      height: 110px;
+      object-fit: contain;
+      background: transparent;
+      display: block;
+    }
+
+    .btn-telecharger-vignette {
+      position: absolute;
+      bottom: 0.35rem;
+      right: 0.35rem;
+      width: 26px;
+      height: 26px;
+      background: var(--blanc);
+      border: var(--bordure-fine);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.15s;
+      color: var(--noir);
+      text-decoration: none;
+    }
+    .btn-telecharger-vignette svg { width: 12px; height: 12px; }
+    .panneau-carte:hover .btn-telecharger-vignette { opacity: 1; }
+    body.mode-nuit .btn-telecharger-vignette { background: #1a1a1a; color: var(--blanc); }
+
+    .panneau-carte-texte {
+      font-size: 0.7rem;
+      text-transform: lowercase;
+      line-height: 1.35;
+      color: var(--noir);
+    }
+
+
+    /* Popup Leaflet minimaliste */
+    .leaflet-popup-content-wrapper {
+      border-radius: 0;
+      border: var(--bordure);
+      box-shadow: none;
+      padding: 0;
+      font-family: var(--font);
+    }
+    .leaflet-popup-content {
+      margin: 0.6rem 0.9rem;
+      font-size: 0.78rem;
+      text-transform: lowercase;
+    }
+    .leaflet-popup-tip-container { display: none; }
+    .leaflet-popup-close-button { display: none; }
+
+    /* Menu déroulant de zoom */
+    #zoom-controls {
+      position: absolute;
+      top: 3.5rem;
+      left: 1rem;
+      z-index: 500;
+    }
+
+    .zoom-dropdown { position: relative; }
+
+    .zoom-btn {
+      background: var(--blanc);
+      border: none;
+      font-family: var(--font);
+      font-size: 0.72rem;
+      padding: 0.35rem 0.75rem;
+      cursor: pointer;
+      color: var(--noir);
+      transition: color 0.15s;
+    }
+    .zoom-btn:hover { color: #4d2882; }
+
+    .zoom-panel {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      background: transparent;
+      border: none;
+      min-width: 100%;
+      flex-direction: column;
+    }
+    .zoom-dropdown.ouvert .zoom-panel { display: flex; }
+
+    .zoom-option {
+      font-family: var(--font);
+      font-size: 0.72rem;
+      padding: 0.2rem 0;
+      cursor: pointer;
+      color: var(--gris-texte);
+      white-space: nowrap;
+      transition: color 0.15s;
+      opacity: 0.8;
+      letter-spacing: 0.05em;
+    }
+    .zoom-option:hover { color: #e8000d; opacity: 1; }
+
+    /* Fond bleu clair pour la carte */
+    #map { background: #e2f2fb; }
+    .leaflet-tile-pane { filter: saturate(1.8) brightness(1.09); }
+
+    /* Tuiles en mode nuit */
+    body.mode-nuit .leaflet-tile-pane { mix-blend-mode: normal; }
+    body.mode-nuit .leaflet-tile { filter: invert(1) hue-rotate(180deg); }
+  </style>
+</head>
+<body>
+
+      <header class="site-header" role="banner">
+    <div class="container">
+      <a href="home.html" class="site-logo">porter nos voix</a>
+      <nav class="site-nav">
+        <div class="nav-groupe">
+        <a href="index.html" data-i18n="nav-archive">archive</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="carte.html" class="active" aria-current="page" data-i18n="nav-carte">carte</a>
+        <a href="explore.html" data-i18n="nav-explorer">explorer</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="temoignage.html" data-i18n="nav-temoignages">témoignage</a>
+        <a href="stats.html" data-i18n="nav-chiffres">chiffre</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="soumettre.html" data-i18n="nav-contribuer">contribuer</a>
+        <a href="apropos.html" data-i18n="nav-apropos">à propos</a>
+        </div>
+      </nav>
+      <div class="lang-switch">
+        <button class="lang-btn actif" data-lang="fr">FR</button>
+        <span class="lang-sep">/</span>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <div id="carte-wrap">
+    <div id="map">
+      <div id="map-overlay"></div>
+    </div>
+    <div id="zoom-controls">
+      <div id="dd-zoom" class="zoom-dropdown">
+        <button id="btn-zoom" class="zoom-btn" aria-haspopup="listbox" aria-expanded="false">Monde ▾</button>
+        <div id="dd-zoom-panel" class="zoom-panel" role="listbox">
+          <div class="zoom-option" data-zone="france">france</div>
+          <div class="zoom-option" data-zone="belgique">belgique</div>
+          <div class="zoom-option" data-zone="suisse">suisse</div>
+          <div class="zoom-option" data-zone="espagne">espagne</div>
+          <div class="zoom-option" data-zone="indonesie">indonésie</div>
+        </div>
+      </div>
+    </div>
+    <aside id="panneau" aria-label="Pancartes de la ville sélectionnée">
+      <div id="panneau-header">
+        <span id="panneau-titre">—</span>
+        <button id="panneau-fermer">✕ fermer</button>
+      </div>
+      <div id="panneau-grille"></div>
+    </aside>
+  </div>
+
+  <div id="carte-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="carte.js?v=5"></script>
+  <script src="nav.js"></script>
+  <script src="lang.js"></script>
+</body>
+</html>

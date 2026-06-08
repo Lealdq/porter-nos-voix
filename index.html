@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>porter nos voix — archive de pancartes</title>
+  <meta name="description" content="Archive photographique de pancartes des manifestations du 8 mars, Journée internationale des droits des femmes.">
+  <meta property="og:title" content="porter nos voix — archive de pancartes">
+  <meta property="og:description" content="Archive photographique mondiale de pancartes féministes.">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="style.css?v=20">
+</head>
+<body>
+
+          <!-- ── EN-TÊTE ─────────────────────────────────────────── -->
+  <header class="site-header" role="banner">
+    <div class="container">
+      <a href="home.html" class="site-logo">porter nos voix</a>
+      <nav class="site-nav">
+        <div class="nav-groupe">
+        <a href="index.html" class="active" aria-current="page" data-i18n="nav-archive">archive</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="carte.html" data-i18n="nav-carte">carte</a>
+        <a href="explore.html" data-i18n="nav-explorer">explorer</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="temoignage.html" data-i18n="nav-temoignages">témoignage</a>
+        <a href="stats.html" data-i18n="nav-chiffres">chiffre</a>
+        </div>
+        <div class="nav-groupe">
+        <a href="soumettre.html" data-i18n="nav-contribuer">contribuer</a>
+        <a href="apropos.html" data-i18n="nav-apropos">à propos</a>
+        </div>
+      </nav>
+      <div class="lang-switch">
+        <button class="lang-btn actif" data-lang="fr">FR</button>
+        <span class="lang-sep">/</span>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── SPLASH OVERLAY ───────────────────────────────────── -->
+  <div id="splash-overlay">
+    <p class="splash-hint" data-i18n="splash-hint">↑ choisir une section</p>
+  </div>
+
+  <!-- ── FILTRES ──────────────────────────────────────────── -->
+  <div class="filtres-bar" role="search" aria-label="Filtres et recherche">
+    <div class="container">
+
+      <!-- Barre visible permanente -->
+      <div class="filtres-top">
+        <div class="filtres-top-left">
+          <button class="filtres-toggle" id="btn-filtres" data-i18n="filtrer" aria-expanded="false" aria-controls="filtres-panel" aria-label="Filtres">
+            filtrer
+          </button>
+          <div class="effacer-col">
+            <button id="btn-effacer" class="btn-effacer" data-i18n="tout-effacer" aria-label="Effacer tous les filtres" hidden>
+              tout effacer
+            </button>
+            <!-- Filtres appliqués, en colonne sous "tout effacer" -->
+            <div id="filtres-actifs-bar" class="filtres-actifs-bar" hidden></div>
+          </div>
+          <!-- Panneau filtres ancré sous le bouton -->
+          <div class="filtres-panel" id="filtres-panel" hidden>
+            <div class="filtres-panel-inner">
+              <div class="filtre-dropdown" id="dd-annee" data-cle="annee">
+                <button class="dd-btn" aria-haspopup="listbox" aria-expanded="false" data-i18n="filtre-annee">année</button>
+                <div class="dd-panel" role="listbox" aria-multiselectable="true"></div>
+              </div>
+              <div class="filtre-dropdown" id="dd-ville" data-cle="ville">
+                <button class="dd-btn" aria-haspopup="listbox" aria-expanded="false" data-i18n="filtre-ville">ville</button>
+                <div class="dd-panel" role="listbox" aria-multiselectable="true"></div>
+              </div>
+              <div class="filtre-dropdown" id="dd-pays" data-cle="pays">
+                <button class="dd-btn" aria-haspopup="listbox" aria-expanded="false" data-i18n="filtre-pays">pays</button>
+                <div class="dd-panel" role="listbox" aria-multiselectable="true"></div>
+              </div>
+              <div class="filtre-dropdown" id="dd-langue" data-cle="langue">
+                <button class="dd-btn" aria-haspopup="listbox" aria-expanded="false" data-i18n="filtre-langue">langue</button>
+                <div class="dd-panel" role="listbox" aria-multiselectable="true"></div>
+              </div>
+              <div class="filtre-dropdown" id="dd-categorie" data-cle="categorie">
+                <button class="dd-btn" aria-haspopup="listbox" aria-expanded="false" data-i18n="filtre-categorie">catégorie</button>
+                <div class="dd-panel" role="listbox" aria-multiselectable="true"></div>
+              </div>
+              <div class="filtre-dropdown" id="dd-couleur" data-cle="couleur">
+                <button class="dd-btn" aria-haspopup="listbox" aria-expanded="false" data-i18n="filtre-couleur">couleur</button>
+                <div class="dd-panel" role="listbox" aria-multiselectable="true"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="filtres-top-right">
+          <div class="col-picker" id="col-picker" aria-label="Nombre de colonnes">
+            <!-- 2 colonnes -->
+            <button class="col-num" data-col="2" aria-label="2 colonnes" title="2 colonnes">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+                <rect x="1" y="1" width="5" height="12" rx="0.5"/>
+                <rect x="8" y="1" width="5" height="12" rx="0.5"/>
+              </svg>
+            </button>
+            <!-- 3 colonnes -->
+            <button class="col-num" data-col="3" aria-label="3 colonnes" title="3 colonnes">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+                <rect x="1"   y="1" width="3" height="12" rx="0.5"/>
+                <rect x="5.5" y="1" width="3" height="12" rx="0.5"/>
+                <rect x="10"  y="1" width="3" height="12" rx="0.5"/>
+              </svg>
+            </button>
+            <!-- 4 colonnes -->
+            <button class="col-num" data-col="4" aria-label="4 colonnes" title="4 colonnes">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+                <rect x="1"    y="1" width="2" height="12" rx="0.5"/>
+                <rect x="4.33" y="1" width="2" height="12" rx="0.5"/>
+                <rect x="7.67" y="1" width="2" height="12" rx="0.5"/>
+                <rect x="11"   y="1" width="2" height="12" rx="0.5"/>
+              </svg>
+            </button>
+            <!-- 6 colonnes -->
+            <button class="col-num col-num-actif" data-col="6" aria-label="6 colonnes" title="6 colonnes">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+                <rect x="1"    y="1" width="1.2" height="12" rx="0.5"/>
+                <rect x="3.36" y="1" width="1.2" height="12" rx="0.5"/>
+                <rect x="5.72" y="1" width="1.2" height="12" rx="0.5"/>
+                <rect x="8.08" y="1" width="1.2" height="12" rx="0.5"/>
+                <rect x="10.44" y="1" width="1.2" height="12" rx="0.5"/>
+                <rect x="12.8" y="1" width="1.2" height="12" rx="0.5"/>
+              </svg>
+            </button>
+          </div>
+          <div class="recherche-wrapper" style="position:relative;">
+            <svg viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="search" id="champ-recherche" placeholder="recherche par mot…" aria-label="Rechercher dans les pancartes" autocomplete="off">
+            <div class="mots-cles-strip" aria-label="Mots-clés suggérés">
+              <span class="mot-cle-chip" data-mot="femme">femme</span>
+              <span class="mot-cle-chip" data-mot="patriarcat">patriarcat</span>
+              <span class="mot-cle-chip" data-mot="corps">corps</span>
+              <span class="mot-cle-chip" data-mot="droits">droits</span>
+              <span class="mot-cle-chip" data-mot="violence">violence</span>
+              <span class="mot-cle-chip" data-mot="avortement">avortement</span>
+              <span class="mot-cle-chip" data-mot="travail">travail</span>
+              <span class="mot-cle-chip" data-mot="égalité">égalité</span>
+              <span class="mot-cle-chip" data-mot="solidarité">solidarité</span>
+              <span class="mot-cle-chip" data-mot="liberté">liberté</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const btnFiltres = document.getElementById('btn-filtres');
+    const filtresPanel = document.getElementById('filtres-panel');
+    const filtresTopLeft = btnFiltres.closest('.filtres-top-left');
+    btnFiltres.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const ouvert = !filtresPanel.hidden;
+      filtresPanel.hidden = ouvert;
+      btnFiltres.setAttribute('aria-expanded', String(!ouvert));
+      btnFiltres.classList.toggle('actif', !ouvert);
+      filtresTopLeft.classList.toggle('panneau-ouvert', !ouvert);
+    });
+    document.addEventListener('click', (e) => {
+      if (!filtresPanel.contains(e.target) && e.target !== btnFiltres) {
+        filtresPanel.hidden = true;
+        btnFiltres.setAttribute('aria-expanded', 'false');
+        btnFiltres.classList.remove('actif');
+        filtresTopLeft.classList.remove('panneau-ouvert');
+      }
+    });
+  </script>
+
+  <!-- ── INDICATEUR ANNÉE ────────────────────────────────── -->
+  <div id="annee-indicator" aria-hidden="true"></div>
+
+  <!-- ── GALERIE ──────────────────────────────────────────── -->
+  <main class="galerie-section">
+    <div class="container">
+      <p class="resultats-info" role="status" aria-live="polite" style="display:none;">
+        <span id="resultats-count"></span>
+      </p>
+      <div id="galerie-grille" aria-label="Galerie de pancartes"></div>
+    </div>
+  </main>
+
+  <!-- ── MODAL ────────────────────────────────────────────── -->
+  <div
+    id="modal-overlay"
+    class="modal-overlay"
+    role="region"
+    aria-label="Détail de la pancarte"
+    aria-hidden="true"
+  ></div>
+
+  <script src="gallery.js?v=15"></script>
+  <script>
+    // Cacher filtres au scroll bas, réafficher au scroll haut
+    let dernierScroll = 0;
+    const filtresBar = document.querySelector('.filtres-bar');
+    window.addEventListener('scroll', () => {
+      const scrollActuel = window.scrollY;
+      if (scrollActuel > 60) {
+        filtresBar.classList.toggle('masque', scrollActuel > dernierScroll);
+      } else {
+        filtresBar.classList.remove('masque');
+      }
+      dernierScroll = scrollActuel;
+
+      // Mettre à jour l'indicateur d'année
+      const midY = window.innerHeight / 2;
+      const sections = document.querySelectorAll('.annee-section');
+      let anneeVisible = '';
+      sections.forEach(s => {
+        const rect = s.getBoundingClientRect();
+        if (rect.top <= midY && rect.bottom >= midY) anneeVisible = s.id.replace('annee-', '');
+      });
+      if (!anneeVisible && sections.length) {
+        anneeVisible = sections[0].id.replace('annee-', '');
+      }
+      const ind = document.getElementById('annee-indicator');
+      if (ind && anneeVisible) {
+        ind.textContent = anneeVisible;
+        // Si tout en haut : positionner au-dessus de la première pancarte
+        const firstSection = sections[0];
+        if (firstSection) {
+          const firstRect = firstSection.getBoundingClientRect();
+          if (firstRect.top > 0) {
+            ind.style.top = (firstRect.top - 4) + 'px';
+            ind.style.transform = 'none';
+          } else {
+            ind.style.top = '50%';
+            ind.style.transform = 'translateY(-50%)';
+          }
+        }
+      }
+    }, { passive: true });
+
+    // Init indicateur au chargement de la galerie
+    document.addEventListener('galerie-chargee', () => {
+      window.dispatchEvent(new Event('scroll'));
+    });
+  </script>
+  <script src="nav.js"></script>
+  <script src="lang.js"></script>
+  <script>
+    // Splash overlay — montré une seule fois par session
+    const splashOverlay = document.getElementById('splash-overlay');
+    if (sessionStorage.getItem('splash-vu')) {
+      // Déjà vu cette session → supprimer immédiatement sans animation
+      splashOverlay && splashOverlay.remove();
+    } else {
+      // Première visite → montrer le splash, disparaît au clic d'un lien nav
+      document.querySelectorAll('.site-nav a').forEach(link => {
+        link.addEventListener('click', function(e) {
+          if (link.classList.contains('active')) e.preventDefault();
+          sessionStorage.setItem('splash-vu', '1');
+          if (splashOverlay) {
+            splashOverlay.classList.add('disparait');
+            splashOverlay.addEventListener('transitionend', () => splashOverlay.remove(), { once: true });
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>
