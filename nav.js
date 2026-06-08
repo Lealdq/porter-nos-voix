@@ -48,5 +48,16 @@
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') fermerMenu();
   });
+
+  // ── FR/EN dans le menu mobile ────────────────────────────────────
+  // Injecter les boutons de langue en bas du menu déroulant
+  // (lang.js, chargé après nav.js, les trouvera et les activera)
+  const langDiv = document.createElement('div');
+  langDiv.className = 'nav-lang-mobile';
+  langDiv.innerHTML =
+    '<button class="lang-btn" data-lang="fr">FR</button>' +
+    '<span class="lang-sep">/</span>' +
+    '<button class="lang-btn" data-lang="en">EN</button>';
+  nav.appendChild(langDiv);
 })();
 

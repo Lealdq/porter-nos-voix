@@ -114,6 +114,9 @@ img { display: block; max-width: 100%; }
 .lang-btn.actif { opacity: 1; color: var(--noir); }
 .lang-sep { color: var(--gris-texte); opacity: 0.4; font-size: 0.65rem; }
 
+/* Caché sur desktop, visible seulement dans le hamburger mobile */
+.nav-lang-mobile { display: none; }
+
 /* Logo — tout à gauche */
 .site-logo {
   font-family: var(--font);
@@ -1330,16 +1333,23 @@ body.mode-nuit .carte-btn-telecharger:hover { color: var(--blanc); }
   .site-nav a.active,
   .site-nav a:hover { color: var(--noir); }
 
-  /* Sélecteur de langue dans le menu mobile */
+  /* FR/EN dans le menu hamburger (injecté par nav.js) */
   .nav-lang-mobile {
     margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(0,0,0,0.08);
     display: flex;
     gap: 0.5rem;
     align-items: center;
   }
+  .nav-lang-mobile .lang-btn {
+    font-size: 1rem;
+    opacity: 0.45;
+  }
+  .nav-lang-mobile .lang-btn.actif { opacity: 1; }
 
-  /* Espace entre FR/EN et hamburger */
-  .lang-switch { margin-left: auto; margin-right: 0.75rem; }
+  /* Masquer le lang-switch du header sur mobile */
+  .lang-switch { display: none !important; }
 
   /* Bouton hamburger (injecté par nav.js) */
   .nav-hamburger {
@@ -1368,8 +1378,6 @@ body.mode-nuit .carte-btn-telecharger:hover { color: var(--blanc); }
   .nav-hamburger.actif span:nth-child(2) { opacity: 0; }
   .nav-hamburger.actif span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
-  /* Cacher le sélecteur de langue du header quand le menu est ouvert */
-  body.nav-ouvert .lang-switch { visibility: hidden; }
 
   /* ── Galerie ── */
   .annee-grille { grid-template-columns: repeat(2, 1fr) !important; }
