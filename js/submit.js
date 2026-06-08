@@ -1,11 +1,20 @@
 "use strict";
-/* Envoi du formulaire de contribution vers le serveur local (serve.rb).
+/* Envoi du formulaire de contribution.
    ─────────────────────────────────────────────────────────────────────
-   Les soumissions sont sauvegardées dans data/soumissions.json
-   et les photos dans data/soumissions/photos/.
-   Le serveur doit tourner : ruby serve.rb                              */
+   • En local  (localhost) → serveur Ruby serve.rb sur le port 8787
+   • En ligne  (Netlify)   → Web3Forms  (email à lea94120@icloud.com)
+
+   Pour activer l'envoi en ligne :
+   1. Va sur https://web3forms.com
+   2. Entre lea94120@icloud.com → reçois ta clé par mail
+   3. Remplace VOTRE_CLE_WEB3FORMS ci-dessous par ta clé             */
 (function () {
-  const ENDPOINT = "http://localhost:8787/api/soumettre";
+  const WEB3FORMS_KEY = "VOTRE_CLE_WEB3FORMS";
+
+  const IS_LOCAL = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+  const ENDPOINT = IS_LOCAL
+    ? "http://localhost:8787/api/soumettre"
+    : "https://api.web3forms.com/submit";
 
   const form   = document.getElementById("formulaire-soumission");
   if (!form) return;
@@ -15,19 +24,22 @@
 
   const EN = () => ((window.getLang ? window.getLang() : "fr") === "en");
   const T = {
-    envoi:  () => EN() ? "sending…" : "envoi en cours…",
-    ok:     () => EN()
+    envoi:   () => EN() ? "sending…" : "envoi en cours…",
+    ok:      () => EN()
       ? "Thank you! Your sign has been submitted and will be reviewed before publication."
-      : "Merci ! Votre pancarte a été envoyée et sera vérifiée avant publication.",
-    err:    () => EN()
+      : "Merci ! Votre pancarte a été envoyée et sera vérifiée avant publication.",
+    err:     () => EN()
       ? "Something went wrong. Please try again later."
       : "Une erreur est survenue. Veuillez réessayer plus tard.",
-    champs: () => EN()
+    champs:  () => EN()
       ? "Please fill in city, country, year and add a photo."
       : "Veuillez renseigner ville, pays, année et ajouter une photo.",
+    cle:     () => EN()
+      ? "The form is not configured yet. Contact the administrator."
+      : "Le formulaire n'est pas encore configuré. Contactez l'administratrice.",
     serveur: () => EN()
       ? "The local server is not running. Start it with: ruby serve.rb"
-      : "Le serveur local n'est pas démarré. Lancez : ruby serve.rb",
+      : "Le serveur local n'est pas démarré. Lancez : ruby serve.rb",
   };
 
   function montrer(el, msg) {
@@ -51,10 +63,22 @@
 
     if (!ville || !pays || !annee || !photo) { montrer(erreur, T.champs()); return; }
 
-    // On envoie le FormData natif (les noms de champs correspondent
-    // à ceux du formulaire HTML : texte, ville, pays, annee, langue,
-    // description, themes, photographe, photo)
+    // En ligne : vérifier que la clé Web3Forms est configurée
+    if (!IS_LOCAL && WEB3FORMS_KEY === "VOTRE_CLE_WEB3FORMS") {
+      montrer(erreur, T.cle()); return;
+    }
+
     const data = new FormData(form);
+
+    // Champs supplémentaires pour Web3Forms (ignorés par le serveur local)
+    if (!IS_LOCAL) {
+      const themes = [...form.querySelectorAll('input[name="themes"]:checked')].map(c => c.value);
+      data.append("access_key",  WEB3FORMS_KEY);
+      data.append("subject",     "Nouvelle pancarte — porter nos voix");
+      data.append("from_name",   "Porter nos voix");
+      data.append("botcheck",    "");
+      data.append("thèmes",      themes.join(", "));
+    }
 
     const labelOrig = btn.textContent;
     btn.disabled    = true;
@@ -62,17 +86,16 @@
 
     try {
       const r = await fetch(ENDPOINT, { method: "POST", body: data });
-
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
-
       const j = await r.json();
+
       if (j.success) {
         montrer(succes, T.ok());
         form.reset();
         const apercu = document.getElementById("apercu-photo");
         if (apercu) { apercu.src = ""; apercu.style.display = "none"; }
       } else {
-        montrer(erreur, (j.message ? `Erreur : ${j.message}` : T.err()));
+        montrer(erreur, j.message ? `Erreur : ${j.message}` : T.err());
       }
     } catch (err) {
       if (err instanceof TypeError && err.message.includes("fetch")) {
