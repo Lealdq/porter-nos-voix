@@ -269,7 +269,8 @@
       <div id="message-succes" class="message-succes" role="alert" aria-live="assertive"></div>
       <div id="message-erreur" class="message-erreur" role="alert" aria-live="assertive"></div>
 
-      <form id="formulaire-soumission" novalidate enctype="multipart/form-data">
+      <form id="formulaire-soumission" name="contribution" netlify novalidate>
+        <input type="hidden" name="form-name" value="contribution">
 
         <!-- 01 · la pancarte -->
         <div class="contribuer-section">
@@ -348,7 +349,7 @@
           <div class="contribuer-corps">
             <p class="contribuer-section-titre" data-i18n="form-section-03">la photo</p>
             <div class="zone-depot" id="zone-depot" role="button" aria-label="Zone de dépôt d'image">
-              <input type="file" id="champ-photo" name="photo"
+              <input type="file" id="champ-photo"
                 accept="image/jpeg,image/png,image/webp" aria-label="Choisir une image">
               <span class="depot-label" data-i18n="form-depot-label">glisser une image ou cliquer pour parcourir</span>
               <p class="depot-formats">jpg · png · webp — max 10 mo</p>

@@ -7,7 +7,7 @@
   const IS_LOCAL = location.hostname === "localhost" || location.hostname === "127.0.0.1";
   const ENDPOINT = IS_LOCAL
     ? "http://localhost:8787/api/soumettre"
-    : "https://formspree.io/f/xdavgrdd";
+    : "/";
 
   const form   = document.getElementById("formulaire-soumission");
   if (!form) return;
@@ -52,7 +52,8 @@
     const ville = form.ville.value.trim();
     const pays  = form.pays.value.trim();
     const annee = form.annee.value.trim();
-    const photo = form.photo.files[0];
+    // L'input photo n'a pas de name= pour éviter les blocages des services tiers
+    const photo = document.getElementById("champ-photo").files[0];
 
     if (!ville || !pays || !annee || !photo) { montrer(erreur, T.champs()); return; }
 
@@ -75,8 +76,9 @@
         photoUrl = imgJ.data.url;
       }
 
-      // ── Étape 2 : envoyer les données texte + lien photo à Formspree ───
+      // ── Étape 2 : envoyer les données texte + lien photo à Netlify Forms ─
       const data = new FormData();
+      data.append("form-name",    "contribution");
       data.append("ville",        form.ville.value.trim());
       data.append("pays",         form.pays.value.trim());
       data.append("annee",        form.annee.value.trim());
@@ -87,18 +89,14 @@
       // Thèmes cochés
       const themes = [...form.querySelectorAll(".theme-check:checked")].map(c => c.value).join(", ");
       if (themes) data.append("themes", themes);
-      // Lien photo (texte, pas fichier — Formspree gratuit n'accepte pas les fichiers)
+      // Photo : fichier en local, lien imgBB en ligne
       if (IS_LOCAL) {
-        data.append("photo", photo, photo.name);   // local : envoi direct
+        data.append("photo", photo, photo.name);
       } else {
-        data.append("photo_lien", photoUrl);       // en ligne : lien imgBB
+        data.append("photo_lien", photoUrl);
       }
 
-      const r = await fetch(ENDPOINT, {
-        method: "POST",
-        body: data,
-        headers: { "Accept": "application/json" }
-      });
+      const r = await fetch(ENDPOINT, { method: "POST", body: data });
 
       if (r.ok) {
         montrer(succes, T.ok());
@@ -106,9 +104,7 @@
         const apercu = document.getElementById("apercu-photo");
         if (apercu) { apercu.src = ""; apercu.style.display = "none"; }
       } else {
-        const j = await r.json().catch(() => ({}));
-        const msg = (j.errors && j.errors[0] && j.errors[0].message) || T.err();
-        montrer(erreur, msg);
+        montrer(erreur, T.err());
       }
     } catch (err) {
       if (err instanceof TypeError) {
