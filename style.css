@@ -1437,6 +1437,15 @@ body.mode-nuit .carte-btn-telecharger:hover { color: var(--blanc); }
 
   /* ── Carte ── */
   .carte-sidebar { display: none; }
+  /* Panneau ville : plein écran sur mobile */
+  #panneau {
+    width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    z-index: 800 !important;
+  }
 
   /* ── À propos ── */
   .apropos-section { flex-direction: column; }

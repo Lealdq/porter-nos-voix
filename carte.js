@@ -167,6 +167,9 @@ function ouvrirPanneau(groupe) {
   panneauOuvert = groupe;
   const ls = document.querySelector(".lang-switch");
   if (ls) ls.style.visibility = "hidden";
+  // Sur mobile : cacher le menu zoom pour ne pas le voir par-dessus le panneau
+  const zc = document.getElementById("zoom-controls");
+  if (zc && window.innerWidth <= 768) zc.style.display = "none";
 }
 
 function fermerPanneau() {
@@ -174,6 +177,9 @@ function fermerPanneau() {
   panneauOuvert = null;
   const ls = document.querySelector(".lang-switch");
   if (ls) ls.style.visibility = "";
+  // Réafficher le menu zoom (mobile)
+  const zc = document.getElementById("zoom-controls");
+  if (zc) zc.style.display = "";
 }
 
 function ouvrirModal(groupe, index) {
