@@ -1338,6 +1338,9 @@ body.mode-nuit .carte-btn-telecharger:hover { color: var(--blanc); }
     align-items: center;
   }
 
+  /* Espace entre FR/EN et hamburger */
+  .lang-switch { margin-left: auto; margin-right: 0.75rem; }
+
   /* Bouton hamburger (injecté par nav.js) */
   .nav-hamburger {
     display: flex;
