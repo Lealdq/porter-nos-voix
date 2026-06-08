@@ -64,14 +64,29 @@ async function init() {
     const coords = COORDS[key];
     if (!coords) { console.warn("Coordonnées manquantes :", key); return; }
 
-    const n = groupe.pancartes.length;
+    const n    = groupe.pancartes.length;
     const size = Math.max(32, Math.min(56, 28 + Math.log(n) * 8));
+
+    // Forme pancarte : rectangle avec coin bas-droit découpé
+    const w  = size;
+    const h  = Math.round(size * 1.05);
+    const sx = Math.round(w * 0.70);   // position horizontale du découpage
+    const sy = Math.round(h * 0.70);   // position verticale du découpage
+    const fs = Math.max(9, Math.round(size * 0.27));
 
     const icon = L.divIcon({
       className: "",
-      html: `<div class="marqueur-ville" style="width:${size}px;height:${size}px">${n}</div>`,
-      iconSize: [size, size],
-      iconAnchor: [size / 2, size / 2],
+      html: `<svg class="marqueur-ville" xmlns="http://www.w3.org/2000/svg"
+        width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+        <path d="M2,0 L${w-2},0 Q${w},0 ${w},2 L${w},${sy} L${sx},${sy} L${sx},${h} L2,${h} Q0,${h} 0,${h-2} L0,2 Q0,0 2,0 Z"/>
+        <text x="${w * 0.44}" y="${h * 0.42}"
+          text-anchor="middle" dominant-baseline="central"
+          fill="#e2f2fb" font-size="${fs}"
+          font-family="'CMM Coda',Helvetica,sans-serif"
+          font-weight="700">${n}</text>
+      </svg>`,
+      iconSize: [w, h],
+      iconAnchor: [w / 2, h / 2],
     });
 
     const marker = L.marker(coords, { icon }).addTo(map);

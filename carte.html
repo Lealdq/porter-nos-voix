@@ -37,20 +37,19 @@
       z-index: 600 !important;
     }
 
-    /* Marqueur personnalisé */
+    /* Marqueur pancarte SVG */
     .marqueur-ville {
-      background: var(--noir);
-      color: #e2f2fb;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font);
-      font-size: 0.65rem;
+      display: block;
       cursor: pointer;
-      transition: background 0.18s, transform 0.15s;
+      transition: transform 0.15s;
+      overflow: visible;
     }
-    .marqueur-ville:hover { background: #4d2882; transform: scale(1.1); }
+    .marqueur-ville path {
+      fill: #e8000d;
+      transition: fill 0.18s;
+    }
+    .marqueur-ville:hover { transform: scale(1.1); }
+    .marqueur-ville:hover path { fill: #4d2882; }
 
     /* Panneau latéral */
     #panneau {
