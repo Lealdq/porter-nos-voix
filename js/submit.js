@@ -56,13 +56,44 @@
 
     if (!ville || !pays || !annee || !photo) { montrer(erreur, T.champs()); return; }
 
-    const data = new FormData(form);
-
     const labelOrig = btn.textContent;
     btn.disabled    = true;
     btn.textContent = T.envoi();
 
     try {
+      // ── Étape 1 : uploader la photo sur imgBB ──────────────────────────
+      let photoUrl = "";
+      if (!IS_LOCAL) {
+        const imgData = new FormData();
+        imgData.append("image", photo);
+        const imgR = await fetch(
+          "https://api.imgbb.com/1/upload?key=f2f0f75f5aaab536133f5435fdaf7b8b",
+          { method: "POST", body: imgData }
+        );
+        const imgJ = await imgR.json();
+        if (!imgR.ok || !imgJ.success) throw new Error("Échec de l'upload photo.");
+        photoUrl = imgJ.data.url;
+      }
+
+      // ── Étape 2 : envoyer les données texte + lien photo à Formspree ───
+      const data = new FormData();
+      data.append("ville",        form.ville.value.trim());
+      data.append("pays",         form.pays.value.trim());
+      data.append("annee",        form.annee.value.trim());
+      data.append("texte",        form.texte?.value.trim() || "");
+      data.append("langue",       form.langue?.value || "");
+      data.append("description",  form.description?.value.trim() || "");
+      data.append("photographe",  form.photographe?.value.trim() || "");
+      // Thèmes cochés
+      const themes = [...form.querySelectorAll(".theme-check:checked")].map(c => c.value).join(", ");
+      if (themes) data.append("themes", themes);
+      // Lien photo (texte, pas fichier — Formspree gratuit n'accepte pas les fichiers)
+      if (IS_LOCAL) {
+        data.append("photo", photo, photo.name);   // local : envoi direct
+      } else {
+        data.append("photo_lien", photoUrl);       // en ligne : lien imgBB
+      }
+
       const r = await fetch(ENDPOINT, {
         method: "POST",
         body: data,
@@ -75,7 +106,6 @@
         const apercu = document.getElementById("apercu-photo");
         if (apercu) { apercu.src = ""; apercu.style.display = "none"; }
       } else {
-        // Formspree renvoie { errors: [{ message: "..." }] } en cas d'erreur
         const j = await r.json().catch(() => ({}));
         const msg = (j.errors && j.errors[0] && j.errors[0].message) || T.err();
         montrer(erreur, msg);
