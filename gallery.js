@@ -258,7 +258,7 @@ function creerCartePancarte(p, index) {
 
   article.innerHTML = `
     <img class="carte-image" src="${p.image}"
-      alt="${p.texte ? `pancarte : ${p.texte}` : `pancarte ${p.id}`}" loading="lazy"/>
+      alt="${p.texte ? `pancarte : ${p.texte}` : `pancarte ${p.id}`}" />
     <div class="carte-corps">
       ${texteLine}
       <div class="carte-meta-row">
@@ -314,7 +314,7 @@ function ouvrirModal(index) {
         return `
         <div class="modal-item" data-index="${i}" id="modal-item-${i}">
           <div class="modal-image-wrap">
-            <img src="${p.image}" alt="${p.texte ? `pancarte : ${p.texte}` : `pancarte ${p.id}`}" loading="lazy"/>
+            <img src="${p.image}" alt="${p.texte ? `pancarte : ${p.texte}` : `pancarte ${p.id}`}" />
           </div>
           <div class="modal-infos">
             ${p.texte ? `<p class="modal-texte-pancarte">${p.texte.toLowerCase()}</p>` : ""}
