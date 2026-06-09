@@ -114,6 +114,34 @@ async function init() {
     if (e.key === "Escape") fermerModal();
   });
 
+  // ── Tooltip survol ───────────────────────────────────────────────
+  const tooltip = document.getElementById("explore-tooltip");
+  if (tooltip) {
+    scene.addEventListener("mousemove", (e) => {
+      const el = e.target.closest(".affiche");
+      if (!el || panning) { tooltip.classList.remove("visible"); return; }
+      const idx = parseInt(el.dataset.index);
+      const p   = pancartes[idx];
+      if (!p) { tooltip.classList.remove("visible"); return; }
+
+      const texte = p.texte ? `<span class="tt-texte">${p.texte.toLowerCase()}</span>` : "";
+      const meta  = [p.ville, p.annee].filter(Boolean).join(" · ").toLowerCase();
+      tooltip.innerHTML = texte + `<span class="tt-meta">${meta}</span>`;
+
+      const ox = 14, oy = 14;
+      let x = e.clientX + ox;
+      let y = e.clientY + oy;
+      // Éviter de déborder à droite / en bas
+      if (x + 270 > window.innerWidth)  x = e.clientX - 270 - ox;
+      if (y + 80  > window.innerHeight) y = e.clientY - 80  - oy;
+      tooltip.style.left = x + "px";
+      tooltip.style.top  = y + "px";
+      tooltip.classList.add("visible");
+    });
+
+    scene.addEventListener("mouseleave", () => tooltip.classList.remove("visible"));
+  }
+
   document.getElementById("explore-modal").addEventListener("click", e => {
     if (e.target === document.getElementById("explore-modal")) fermerModal();
   });

@@ -103,13 +103,6 @@ async function init() {
     });
 
     const marker = L.marker(coords, { icon }).addTo(map);
-
-    marker.bindTooltip(
-      `<span class="tt-ville">${groupe.ville.toLowerCase()}</span>` +
-      `<span class="tt-n">${n} pancarte${n > 1 ? "s" : ""}</span>`,
-      { direction: "top", offset: [0, -(h / 2 + 8)], className: "marqueur-tooltip" }
-    );
-
     marker.on("click", () => {
       if (panneauOuvert === groupe) { fermerPanneau(); }
       else { ouvrirPanneau(groupe); }

@@ -158,6 +158,28 @@
       .curseur-col-wrap { display: none; }
     }
 
+    /* Tooltip survol pancarte */
+    #explore-tooltip {
+      position: fixed;
+      z-index: 9000;
+      pointer-events: none;
+      background: var(--blanc);
+      border: 0.5px solid rgba(0,0,0,0.15);
+      padding: 0.3rem 0.6rem;
+      font-family: var(--font);
+      font-size: 0.72rem;
+      color: var(--noir);
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.1s;
+      max-width: 260px;
+      white-space: normal;
+      line-height: 1.4;
+    }
+    #explore-tooltip.visible { opacity: 1; }
+    #explore-tooltip .tt-texte { display: block; font-weight: 700; }
+    #explore-tooltip .tt-meta  { display: block; color: var(--gris-texte); margin-top: 0.1rem; }
+
     #curseur-zoom {
       -webkit-appearance: none;
       appearance: none;
@@ -230,7 +252,9 @@
 
   <div id="explore-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true"></div>
 
-  <script src="explore.js?v=18"></script>
+  <div id="explore-tooltip" aria-hidden="true"></div>
+
+  <script src="explore.js?v=19"></script>
   <script src="nav.js"></script>
   <script src="lang.js"></script>
 </body>
