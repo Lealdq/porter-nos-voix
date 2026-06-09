@@ -111,16 +111,7 @@ async function init() {
   document.addEventListener("touchend",  onTouchEnd);
 
   document.addEventListener("keydown", e => {
-    if (e.key === "Escape") { fermerModal(); return; }
-    if (modalIndex < 0) return;
-    if (e.key === "ArrowRight") {
-      modalIndex = (modalIndex + 1) % pancartes.length;
-      afficherDansModal(modalIndex);
-    }
-    if (e.key === "ArrowLeft") {
-      modalIndex = (modalIndex - 1 + pancartes.length) % pancartes.length;
-      afficherDansModal(modalIndex);
-    }
+    if (e.key === "Escape") fermerModal();
   });
 
   // ── Tooltip survol ───────────────────────────────────────────────
@@ -643,23 +634,9 @@ function afficherDansModal(index) {
     <div class="explore-plein-meta">
       ${p.texte ? `<span class="explore-plein-texte">${p.texte.toLowerCase()}</span>` : ""}
       ${lieu || p.annee ? `<span class="explore-plein-lieu">${[lieu, p.annee].filter(Boolean).join(" · ")}</span>` : ""}
-    </div>
-    <button class="explore-nav explore-nav-prev" aria-label="Précédent">←</button>
-    <button class="explore-nav explore-nav-next" aria-label="Suivant">→</button>`;
+    </div>`;
 
   overlay.querySelector(".modal-fermer").addEventListener("click", fermerModal);
-  overlay.querySelector(".explore-nav-prev").addEventListener("click", (e) => {
-    e.stopPropagation();
-    const prev = (modalIndex - 1 + pancartes.length) % pancartes.length;
-    modalIndex = prev;
-    afficherDansModal(prev);
-  });
-  overlay.querySelector(".explore-nav-next").addEventListener("click", (e) => {
-    e.stopPropagation();
-    const next = (modalIndex + 1) % pancartes.length;
-    modalIndex = next;
-    afficherDansModal(next);
-  });
   overlay.querySelector(".modal-fermer").focus();
 }
 
