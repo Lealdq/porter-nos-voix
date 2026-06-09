@@ -1,3 +1,14 @@
+// Redirect to landing on page refresh
+(function () {
+  const p = window.location.pathname;
+  // Ne pas rediriger si déjà sur la landing
+  if (p === '/' || p.endsWith('/index.html') || p.endsWith('/home.html')) return;
+  const entries = performance.getEntriesByType('navigation');
+  if (entries.length > 0 && entries[0].type === 'reload') {
+    window.location.replace('/');
+  }
+})();
+
 // ── Menu hamburger mobile ────────────────────────────────────────
 (function () {
   const header = document.querySelector('.site-header .container');
