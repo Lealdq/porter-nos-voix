@@ -152,6 +152,22 @@
     }
 
 
+    /* Tooltip survol marqueur */
+    .marqueur-tooltip {
+      background: var(--blanc);
+      border: 0.5px solid rgba(0,0,0,0.15);
+      border-radius: 0;
+      box-shadow: none;
+      padding: 0.3rem 0.6rem;
+      font-family: var(--font);
+      font-size: 0.72rem;
+      color: var(--noir);
+      white-space: nowrap;
+    }
+    .marqueur-tooltip::before { display: none; }
+    .marqueur-tooltip .tt-ville { font-weight: 700; }
+    .marqueur-tooltip .tt-n { color: var(--gris-texte); margin-left: 0.4rem; }
+
     /* Popup Leaflet minimaliste */
     .leaflet-popup-content-wrapper {
       border-radius: 0;
@@ -281,7 +297,7 @@
   <div id="carte-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true"></div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="carte.js?v=6"></script>
+  <script src="carte.js?v=7"></script>
   <script src="nav.js"></script>
   <script src="lang.js"></script>
 </body>
