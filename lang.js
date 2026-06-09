@@ -97,7 +97,7 @@ const TRAD = {
     "apropos-bar-intro":      "archive participative de pancartes du 8 mars — journée internationale des droits des femmes et des minorités de genre",
     "apropos-01-titre":       "le projet",
     "apropos-01-slogan":      "chaque pancarte est un acte de langage collectif.",
-    "apropos-01-p1":          "cette archive rassemble des photographies de pancartes portées lors des manifestations du 8 mars à travers le monde. les rassembler, les indexer, les rendre accessibles — c'est préserver une mémoire militante qui disparaît souvent après le passage des cortèges.",
+    "apropos-01-p1":          "cette archive rassemble des photographies de pancartes portées lors des manifestations du 8 mars à travers le monde. les rassembler, les indexer, les rendre accessibles, c'est préserver une mémoire militante qui disparaît souvent après le passage des cortèges.",
     "apropos-01-p2":          "les pancartes ne sont pas de simples slogans. elles condensent une colère, une revendication, parfois de l'humour ou de la poésie. portées en foule, elles constituent un langage visuel collectif qui mérite d'être documenté et étudié.",
     "apropos-02-titre":       "la démarche",
     "apropos-02-p1":          "porter nos voix est un projet de mémoire en communication visuelle. il s'inscrit dans une réflexion sur les formes d'expression militante et la constitution de mémoires collectives par l'image.",
