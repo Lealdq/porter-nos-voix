@@ -148,18 +148,8 @@ async function init() {
 
   document.getElementById("btn-vue").addEventListener("click", basculerVue);
 
-  // Dropdown année
-  document.getElementById("btn-annee-dd").addEventListener("click", (e) => {
-    e.stopPropagation();
-    const dd = document.getElementById("dd-annee");
-    const isOpen = dd.classList.toggle("ouvert");
-    e.currentTarget.setAttribute("aria-expanded", isOpen);
-  });
   document.addEventListener("click", () => {
-    const dd = document.getElementById("dd-annee");
-    if (dd && dd.classList.contains("ouvert")) {
-      dd.classList.remove("ouvert");
-      document.getElementById("btn-annee-dd").setAttribute("aria-expanded", "false");
+    if (false) {
     }
   });
 
@@ -523,8 +513,6 @@ function basculerVue() {
     targetTy = (scene.clientHeight - frisePositions._totalH * targetScale) / 2;
     syncCurseur(targetScale);
     anneeActive = frisePositions._years[0];
-    mettreAJourNavAnnee();
-    document.getElementById("dd-annee").style.display = "";
   } else {
     btn.textContent = "frise chronologique";
     // Freeform = navigation infinie : grande boîte centrée
@@ -538,7 +526,6 @@ function basculerVue() {
     targetTx = (scene.clientWidth  - CANVAS_W * targetScale) / 2;
     targetTy = (scene.clientHeight - CANVAS_H * targetScale) / 2;
     syncCurseur(0.18);
-    document.getElementById("dd-annee").style.display = "none";
     anneeActive = null;
   }
 
@@ -568,19 +555,11 @@ function zoomerSurAnnee(year) {
   targetTy = (scene.clientHeight - frisePositions._totalH * targetScale) / 2;
   syncCurseur(targetScale);
   anneeActive = year;
-  mettreAJourNavAnnee();
 }
 
 function mettreAJourNavAnnee() {
-  const dd    = document.getElementById("dd-annee");
-  const btn   = document.getElementById("btn-annee-dd");
-  const panel = document.getElementById("dd-annee-panel");
-  if (!dd || !frisePositions._years) return;
-
+  if (!frisePositions._years) return;
   const years = frisePositions._years;
-  btn.textContent = (anneeActive || years[0]) + " ▾";
-
-  panel.innerHTML = "";
   years.forEach(year => {
     const opt = document.createElement("div");
     opt.className = "annee-option" + (year === anneeActive ? " actif" : "");
@@ -612,8 +591,6 @@ function ouvrirModal(index) {
   overlay.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
   document.getElementById("controles-bas").style.display = "none";
-  const ddAnnee = document.getElementById("dd-annee");
-  if (ddAnnee) ddAnnee.style.display = "none";
 }
 
 function afficherDansModal(index) {
@@ -647,10 +624,6 @@ function fermerModal() {
   overlay.setAttribute("aria-hidden", "true");
   document.body.style.overflow = "";
   document.getElementById("controles-bas").style.display = "";
-  if (modeFrise) {
-    const ddAnnee = document.getElementById("dd-annee");
-    if (ddAnnee) ddAnnee.style.display = "";
-  }
   modalIndex = -1;
 }
 
