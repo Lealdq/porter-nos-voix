@@ -43,19 +43,13 @@
     }
 
     @media (max-width: 600px) {
+      /* Les deux écrans partent du même point en haut → pas de saut visible */
       #ecran-1, #ecran-2 {
         flex-direction: column !important;
-        justify-content: center !important;
-        align-items: flex-start !important;
-        padding: 0 1.5rem !important;
-        gap: 0.35rem !important;
-      }
-      /* Écran 1 : aligner "Porter nos voix" à la même hauteur que l'écran 2.
-         Écran 2 a 1 item centré → top ≈ 50vh - 0.6rem.
-         Écran 1 a 3 items : on part du haut avec ce même padding-top. */
-      #ecran-1 {
         justify-content: flex-start !important;
-        padding-top: calc(50vh - 0.6rem) !important;
+        align-items: flex-start !important;
+        padding: 38vh 1.5rem 0 !important;
+        gap: 0.35rem !important;
       }
       #ecran-1 span, #ecran-2 span {
         max-width: 100% !important;
