@@ -68,7 +68,7 @@
         const imgData = new FormData();
         imgData.append("image", photo);
         const imgR = await fetch(
-          "https://api.imgbb.com/1/upload?key=f2f0f75f5aaab536133f5435fdaf7b8b",
+          "https://api.imgbb.com/1/upload?key=IMGBB_KEY",
           { method: "POST", body: imgData }
         );
         const imgJ = await imgR.json();
