@@ -180,6 +180,67 @@
     #explore-tooltip .tt-texte { display: block; font-weight: 700; }
     #explore-tooltip .tt-meta  { display: block; color: var(--gris-texte); margin-top: 0.1rem; }
 
+    /* Modal plein écran */
+    .modal-overlay.explore-plein-ecran {
+      display: flex !important;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden !important;
+      background: var(--blanc);
+    }
+    .explore-plein-img {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      width: 100%;
+      padding: 3rem 2rem 1rem;
+    }
+    .explore-plein-img img {
+      max-height: 78vh;
+      max-width: 88vw;
+      object-fit: contain;
+    }
+    .explore-plein-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+      padding: 0 1rem 1.5rem;
+      text-align: center;
+    }
+    .explore-plein-texte {
+      font-family: var(--font);
+      font-size: 0.85rem;
+      color: var(--noir);
+      font-weight: 700;
+    }
+    .explore-plein-lieu {
+      font-family: var(--font);
+      font-size: 0.72rem;
+      color: var(--gris-texte);
+    }
+    /* Flèches nav */
+    .explore-nav {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      font-family: var(--font);
+      font-size: 1.4rem;
+      color: var(--noir);
+      cursor: pointer;
+      padding: 1rem;
+      opacity: 0.35;
+      transition: opacity 0.15s;
+      z-index: 10;
+    }
+    .explore-nav:hover { opacity: 1; }
+    .explore-nav-prev { left: 0.5rem; }
+    .explore-nav-next { right: 0.5rem; }
+
     #curseur-zoom {
       -webkit-appearance: none;
       appearance: none;
@@ -254,7 +315,7 @@
 
   <div id="explore-tooltip" aria-hidden="true"></div>
 
-  <script src="explore.js?v=19"></script>
+  <script src="explore.js?v=20"></script>
   <script src="nav.js"></script>
   <script src="lang.js"></script>
 </body>

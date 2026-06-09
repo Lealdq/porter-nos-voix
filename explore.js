@@ -111,7 +111,16 @@ async function init() {
   document.addEventListener("touchend",  onTouchEnd);
 
   document.addEventListener("keydown", e => {
-    if (e.key === "Escape") fermerModal();
+    if (e.key === "Escape") { fermerModal(); return; }
+    if (modalIndex < 0) return;
+    if (e.key === "ArrowRight") {
+      modalIndex = (modalIndex + 1) % pancartes.length;
+      afficherDansModal(modalIndex);
+    }
+    if (e.key === "ArrowLeft") {
+      modalIndex = (modalIndex - 1 + pancartes.length) % pancartes.length;
+      afficherDansModal(modalIndex);
+    }
   });
 
   // ── Tooltip survol ───────────────────────────────────────────────
@@ -600,60 +609,56 @@ function mettreAJourNavAnnee() {
 function getDist(t) { const dx = t[0].clientX - t[1].clientX, dy = t[0].clientY - t[1].clientY; return Math.sqrt(dx*dx+dy*dy); }
 function getMid(t, el) { const r = el.getBoundingClientRect(); return { x: (t[0].clientX+t[1].clientX)/2-r.left, y: (t[0].clientY+t[1].clientY)/2-r.top }; }
 
-/* ── Modal ────────────────────────────────────────────── */
+/* ── Modal plein écran ────────────────────────────────── */
 function ouvrirModal(index) {
   modalIndex = index;
   const overlay = document.getElementById("explore-modal");
   if (!overlay) return;
 
-  const tvE = (v) => window.tradVille ? window.tradVille(v) : v;
-  const tpE = (v) => window.tradPays  ? window.tradPays(v)  : v;
+  afficherDansModal(index);
 
-  overlay.innerHTML = `
-    <button class="modal-fermer" aria-label="Fermer">✕ fermer</button>
-    <div class="modal-scroll-liste" id="explore-modal-scroll">
-      ${pancartes.map((p, i) => {
-        const lieu = [p.ville ? tvE(p.ville) : null, p.pays ? tpE(p.pays) : null].filter(Boolean).map(s => s.toLowerCase()).join(", ");
-        const themes = (p.themes || []).map(t => `<span class="badge badge-theme">${t}</span>`).join("");
-        return `
-        <div class="modal-item" data-index="${i}" id="explore-modal-item-${i}">
-          <div class="modal-image-wrap">
-            <img src="${p.image}" alt="${p.texte ? `pancarte : ${p.texte}` : `pancarte ${p.id}`}" loading="lazy"/>
-          </div>
-          <div class="modal-infos">
-            ${p.texte ? `<p class="modal-texte-pancarte">${p.texte.toLowerCase()}</p>` : ""}
-            <div class="modal-badges-row">
-              <div class="modal-badges">
-                <span class="badge badge-annee">${p.annee}</span>
-                ${lieu ? `<span class="badge badge-ville">${lieu}</span>` : ""}
-                ${themes}
-              </div>
-              <a class="modal-btn-telecharger" href="${p.image}" download="${p.image.split("/").pop()}" aria-label="Télécharger">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M12 3v13M7 11l5 5 5-5"/><line x1="4" y1="20" x2="20" y2="20"/>
-                </svg>
-              </a>
-            </div>
-          </div>
-        </div>`;
-      }).join("")}
-    </div>`;
-
-  overlay.classList.add("visible");
+  overlay.classList.add("visible", "explore-plein-ecran");
   overlay.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
   document.getElementById("controles-bas").style.display = "none";
   const ddAnnee = document.getElementById("dd-annee");
   if (ddAnnee) ddAnnee.style.display = "none";
+}
 
-  const target = overlay.querySelector(`#explore-modal-item-${index}`);
-  if (target) {
-    setTimeout(() => target.scrollIntoView({ behavior: "instant", block: "start" }), 0);
-  }
+function afficherDansModal(index) {
+  const overlay = document.getElementById("explore-modal");
+  const p = pancartes[index];
+  if (!p) return;
+
+  const tvE = (v) => window.tradVille ? window.tradVille(v) : v;
+  const tpE = (v) => window.tradPays  ? window.tradPays(v)  : v;
+  const lieu = [p.ville ? tvE(p.ville) : null, p.pays ? tpE(p.pays) : null]
+    .filter(Boolean).map(s => s.toLowerCase()).join(", ");
+
+  overlay.innerHTML = `
+    <button class="modal-fermer" aria-label="Fermer">✕ fermer</button>
+    <div class="explore-plein-img">
+      <img src="${p.image}" alt="${p.texte ? `pancarte : ${p.texte}` : `pancarte ${p.id}`}"/>
+    </div>
+    <div class="explore-plein-meta">
+      ${p.texte ? `<span class="explore-plein-texte">${p.texte.toLowerCase()}</span>` : ""}
+      ${lieu || p.annee ? `<span class="explore-plein-lieu">${[lieu, p.annee].filter(Boolean).join(" · ")}</span>` : ""}
+    </div>
+    <button class="explore-nav explore-nav-prev" aria-label="Précédent">←</button>
+    <button class="explore-nav explore-nav-next" aria-label="Suivant">→</button>`;
 
   overlay.querySelector(".modal-fermer").addEventListener("click", fermerModal);
-  overlay.querySelectorAll(".modal-image-wrap img").forEach(img => {
-    img.addEventListener("click", fermerModal);
+  overlay.querySelector(".explore-nav-prev").addEventListener("click", (e) => {
+    e.stopPropagation();
+    const prev = (modalIndex - 1 + pancartes.length) % pancartes.length;
+    modalIndex = prev;
+    afficherDansModal(prev);
+  });
+  overlay.querySelector(".explore-nav-next").addEventListener("click", (e) => {
+    e.stopPropagation();
+    const next = (modalIndex + 1) % pancartes.length;
+    modalIndex = next;
+    afficherDansModal(next);
   });
   overlay.querySelector(".modal-fermer").focus();
 }
@@ -661,7 +666,7 @@ function ouvrirModal(index) {
 function fermerModal() {
   const overlay = document.getElementById("explore-modal");
   if (!overlay) return;
-  overlay.classList.remove("visible");
+  overlay.classList.remove("visible", "explore-plein-ecran");
   overlay.setAttribute("aria-hidden", "true");
   document.body.style.overflow = "";
   document.getElementById("controles-bas").style.display = "";
