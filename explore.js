@@ -92,7 +92,7 @@ async function init() {
   canvas.style.width  = (2 * OFF_TILES + 1) * CANVAS_W + "px";
   canvas.style.height = (2 * OFF_TILES + 1) * CANVAS_H + "px";
 
-  scale = targetScale = 0.18;
+  scale = targetScale = 0.45;
   currentLOD = getLOD();
   tx = targetTx = (scene.clientWidth  - CANVAS_W * scale) / 2;
   ty = targetTy = (scene.clientHeight - CANVAS_H * scale) / 2;
@@ -111,7 +111,9 @@ async function init() {
   document.addEventListener("touchend",  onTouchEnd);
 
   document.addEventListener("keydown", e => {
-    if (e.key === "Escape") fermerModal();
+    if (e.key === "Escape" || e.key === " ") {
+      if (modalIndex >= 0) { e.preventDefault(); fermerModal(); }
+    }
   });
 
   // ── Tooltip survol ───────────────────────────────────────────────
@@ -525,7 +527,7 @@ function basculerVue() {
     targetScale = 0.18;
     targetTx = (scene.clientWidth  - CANVAS_W * targetScale) / 2;
     targetTy = (scene.clientHeight - CANVAS_H * targetScale) / 2;
-    syncCurseur(0.18);
+    syncCurseur(0.45);
     anneeActive = null;
   }
 
@@ -591,6 +593,7 @@ function ouvrirModal(index) {
   overlay.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
   document.getElementById("controles-bas").style.display = "none";
+  overlay.onclick = (e) => { if (e.target === overlay) fermerModal(); };
 }
 
 function afficherDansModal(index) {
@@ -614,6 +617,7 @@ function afficherDansModal(index) {
     </div>`;
 
   overlay.querySelector(".modal-fermer").addEventListener("click", fermerModal);
+  overlay.querySelector(".explore-plein-img img").addEventListener("click", fermerModal);
   overlay.querySelector(".modal-fermer").focus();
 }
 
