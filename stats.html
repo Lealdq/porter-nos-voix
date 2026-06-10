@@ -516,19 +516,13 @@
     const max = Math.max(...entries.map(([, n]) => n)) || 1;
     return entries.slice(0, 8).map(([label, nb, raw], i) => {
       const txt = String(label).toLowerCase();
-      const val = (raw !== undefined && raw !== null) ? raw : label;
-      const href = cle === "q" ? `index.html?q=${encodeURIComponent(txt)}`
-                 : cle ? `index.html?${cle}=${encodeURIComponent(val)}`
-                 : null;
-      const inner = `
+      return `<div class="detail-barre-ligne">
         <span class="detail-barre-label">${txt}</span>
         <span class="detail-barre-pct">${formatPct(nb, total)}</span>
         <div class="detail-barre-track">
           <div class="detail-barre-fill" style="width:0%;--delay:${i * 40}ms" data-w="${(nb / max * 100).toFixed(1)}"></div>
-        </div>`;
-      return href
-        ? `<a class="detail-barre-ligne detail-barre-lien" href="${href}">${inner}</a>`
-        : `<div class="detail-barre-ligne">${inner}</div>`;
+        </div>
+      </div>`;
     }).join("");
   }
 
@@ -542,13 +536,13 @@
     const langues  = compter(sous, "langue").map(([c, n]) => [nomLangue(c), n, c]);
 
     const couleursHtml = couleurs.slice(0, 8).map(([col, n], i) => `
-      <a class="couleur-ligne couleur-lien" href="index.html?couleur=${encodeURIComponent(col)}">
+      <div class="couleur-ligne">
         <span class="couleur-pastille" style="background:${couleurCss(col)}"></span>
         <span class="couleur-pct">${formatPct(n, nb)}</span>
         <div class="couleur-track">
           <div class="couleur-fill" style="width:0%;background:${couleurCss(col).startsWith('linear') ? 'var(--violet)' : couleurCss(col)};--delay:${i * 40}ms" data-w="${(n / couleurs[0][1] * 100).toFixed(1)}"></div>
         </div>
-      </a>`).join("");
+      </div>`).join("");
 
     const sousLabel = nb > 1 ? `${nb} ${g("stats-label-pancartes")}` : `1 ${g("stats-label-pancartes").replace(/s$/, "")}`;
 
