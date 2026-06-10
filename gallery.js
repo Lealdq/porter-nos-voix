@@ -103,8 +103,15 @@ function peuplerDropdown(ddId, valeurs, cle) {
     const dot = (cle === "couleur") ? `<span class="couleur-dot couleur-dot--${val}"></span>` : "";
     const tv0 = (v) => window.tradVille ? window.tradVille(v) : v;
     const tp0 = (v) => window.tradPays  ? window.tradPays(v)  : v;
+    const NOMS_LANGUES = {
+      fr: { fr: "français", en: "anglais", es: "espagnol", it: "italien", ar: "arabe", de: "allemand", pt: "portugais" },
+      en: { fr: "French", en: "English", es: "Spanish", it: "Italian", ar: "Arabic", de: "German", pt: "Portuguese" }
+    };
+    const langCourante = (window.getLang && window.getLang()) || "fr";
+    const tl0 = (v) => (NOMS_LANGUES[langCourante] && NOMS_LANGUES[langCourante][String(v).toLowerCase()]) || String(v);
     const displayVal = cle === "ville" ? tv0(String(val))
                      : cle === "pays"  ? tp0(String(val))
+                     : cle === "langue" ? tl0(String(val))
                      : String(val).toLowerCase();
     opt.innerHTML = `${dot}<span class="dd-option-label">${displayVal}</span><span class="dd-check">✓</span>`;
 
