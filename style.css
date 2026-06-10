@@ -338,6 +338,10 @@ img { display: block; max-width: 100%; }
   top: 0;
   left: 100%;
   right: auto;
+  padding-top: 0;
+}
+.filtres-panel .filtre-dropdown .dd-panel .dd-option:first-child {
+  padding-top: 0.4rem;
 }
 .filtres-panel .filtre-dropdown:hover .dd-panel {
   display: block;
