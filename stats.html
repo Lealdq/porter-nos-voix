@@ -17,11 +17,24 @@
       transition: transform 0.3s ease;
     }
     .stats-bar.masque { transform: translateY(-100%); }
-    .stats-bar .container,
-    .page-stats .container {
+    .stats-bar .container {
       padding: 0 1rem;
       max-width: 100%;
       margin: 0;
+    }
+    .page-stats .container {
+      padding: 0;
+      max-width: 100%;
+      margin: 0;
+    }
+    /* Padding pour les textes seulement */
+    .stats-eyebrow,
+    .stats-phrase,
+    .stats-section-note,
+    .stats-section-titre,
+    .stats-detail {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
     }
     .stats-bar-inner {
       display: flex;
@@ -95,9 +108,11 @@
     .champ {
       display: flex;
       align-items: flex-start;
+      justify-content: space-between;
       gap: clamp(0.9rem, 2.6vw, 2.6rem);
       flex-wrap: wrap;
       margin-bottom: 6rem;
+      padding: 0 1.5rem;
     }
     .champ-col {
       cursor: pointer;
