@@ -296,7 +296,7 @@ img { display: block; max-width: 100%; }
   flex-shrink: 0;
 }
 .filtres-toggle:hover { color: #e8000d; }
-.filtres-toggle.actif { color: var(--violet); box-shadow: 0 1px 0 0 var(--violet); }
+.filtres-toggle.actif { color: var(--violet); }
 
 /* Panneau déroulant des filtres */
 .filtres-panel {

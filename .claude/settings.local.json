@@ -101,7 +101,10 @@
       "Bash(cp /Users/lealeducq/Library/CloudStorage/OneDrive-HESSO/CV3/memoire/pratique/site-pancartes/stats.html /tmp/site-pancartes/stats.html *)",
       "Bash(curl -s -o /dev/null -w \"server: %{http_code}\\\\n\" http://localhost:8787/home.html)",
       "mcp__Claude_in_Chrome__list_connected_browsers",
-      "Bash(npm list *)"
+      "Bash(npm list *)",
+      "Bash(git push *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
