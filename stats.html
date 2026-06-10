@@ -109,11 +109,12 @@
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: clamp(0.9rem, 2.6vw, 2.6rem);
-      flex-wrap: wrap;
+      gap: 0.5rem;
+      flex-wrap: nowrap;
       margin-bottom: 6rem;
       padding: 0 1.5rem;
     }
+    .champ-col { flex: 0 0 auto; }
     .champ-col {
       cursor: pointer;
       transition: opacity 0.25s ease, transform 0.5s cubic-bezier(.2,.7,.2,1), filter 0.2s;
@@ -140,9 +141,17 @@
     }
     .champ-grille {
       display: grid;
-      grid-template-columns: repeat(12, 16px);
+      grid-template-columns: repeat(10, 16px);
       grid-auto-rows: 16px;
       gap: 4px;
+    }
+    @media (max-width: 1200px) {
+      .champ-grille { grid-template-columns: repeat(8, 14px); grid-auto-rows: 14px; gap: 3px; }
+      .champ-cell { width: 14px; height: 14px; }
+    }
+    @media (max-width: 900px) {
+      .champ-grille { grid-template-columns: repeat(6, 12px); grid-auto-rows: 12px; gap: 2px; }
+      .champ-cell { width: 12px; height: 12px; }
     }
     .champ-cell {
       width: 16px;
