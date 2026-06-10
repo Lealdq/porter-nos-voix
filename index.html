@@ -191,6 +191,10 @@
       if (e.deltaY > 30) avancer();
     }, { passive: true });
 
+    document.addEventListener('keydown', (e) => {
+      if (e.key === ' ') { e.preventDefault(); avancer(); }
+    });
+
     let touchStartY = 0;
     window.addEventListener('touchstart', (e) => {
       touchStartY = e.touches[0].clientY;
