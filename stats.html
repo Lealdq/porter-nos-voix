@@ -507,7 +507,9 @@
 
   function formatPct(nb, total) {
     const v = nb / total * 100;
-    return v < 1 ? v.toFixed(1) + "%" : Math.round(v) + "%";
+    if (v >= 1) return Math.round(v) + "%";
+    const s = v.toFixed(1);
+    return (s.endsWith(".0") ? s.slice(0, -2) : s) + "%";
   }
 
   function barreLignes(entries, total, cle) {
