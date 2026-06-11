@@ -92,7 +92,7 @@ async function init() {
   canvas.style.width  = (2 * OFF_TILES + 1) * CANVAS_W + "px";
   canvas.style.height = (2 * OFF_TILES + 1) * CANVAS_H + "px";
 
-  scale = targetScale = 0.45;
+  scale = targetScale = 0.15;
   currentLOD = getLOD();
   tx = targetTx = (scene.clientWidth  - CANVAS_W * scale) / 2;
   ty = targetTy = (scene.clientHeight - CANVAS_H * scale) / 2;
