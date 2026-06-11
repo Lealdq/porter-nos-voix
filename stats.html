@@ -277,9 +277,10 @@
     .couleurs-liste { display: flex; flex-direction: column; gap: 0.9rem; }
     .couleur-ligne {
       display: grid;
-      grid-template-columns: 14px 1fr;
-      align-items: center;
-      gap: 0.5rem 0.7rem;
+      grid-template-columns: 1fr auto;
+      align-items: baseline;
+      gap: 0.2rem 0.75rem;
+      margin-bottom: 1rem;
     }
     /* Couleurs cliquables -> filtre l'archive par couleur */
     a.couleur-lien { text-decoration: none; color: inherit; cursor: pointer; transition: opacity 0.15s; }
@@ -539,7 +540,7 @@
 
     const couleursHtml = couleurs.slice(0, 8).map(([col, n], i) => `
       <div class="couleur-ligne">
-        <span class="couleur-pastille" style="background:${couleurCss(col)}"></span>
+        <span class="detail-barre-label">${String(col).toLowerCase()}</span>
         <span class="couleur-pct">${formatPct(n, nb)}</span>
         <div class="couleur-track">
           <div class="couleur-fill" style="width:0%;background:${couleurCss(col).startsWith('linear') ? 'var(--violet)' : couleurCss(col)};--delay:${i * 40}ms" data-w="${(n / couleurs[0][1] * 100).toFixed(1)}"></div>
