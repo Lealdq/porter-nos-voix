@@ -45,7 +45,7 @@ const TRAD = {
     "stats-section-overview":"vue d'ensemble",
     "stats-section-annee":   "le champ des pancartes",
     "stats-eyebrow":         "une archive en expansion",
-    "stats-mosaique":        "Chaque carré représente une pancarte, classée par année et colorée selon sa couleur dominante. Cliquez sur une année pour la détailler.",
+    "stats-mosaique":        "Chaque carré représente une pancarte, classée par année et colorée selon sa couleur dominante.<br>Cliquez sur une année pour la détailler.",
     "stats-legende":         "couleurs dominantes",
     "stats-click-hint":      "← cliquer sur une année pour voir le détail",
     "stats-global-pancartes":"toutes les pancartes",
@@ -157,7 +157,7 @@ const TRAD = {
     "stats-section-overview":"overview",
     "stats-section-annee":   "the field of signs",
     "stats-eyebrow":         "an expanding archive",
-    "stats-mosaique":        "Each square is one sign, sorted by year and coloured by its dominant colour. Click a year to see details.",
+    "stats-mosaique":        "Each square is one sign, sorted by year and coloured by its dominant colour.<br>Click a year to see details.",
     "stats-legende":         "dominant colours",
     "stats-click-hint":      "← click a year to see details",
     "stats-global-pancartes":"all signs",
@@ -240,7 +240,10 @@ function appliquerLang(lang) {
   // Tous les éléments avec data-i18n
   document.querySelectorAll("[data-i18n]").forEach(el => {
     const key = el.dataset.i18n;
-    if (t[key] !== undefined) el.textContent = t[key];
+    if (t[key] !== undefined) {
+      if (t[key].includes("<")) el.innerHTML = t[key];
+      else el.textContent = t[key];
+    }
   });
 
   // Placeholders avec data-i18n-placeholder
