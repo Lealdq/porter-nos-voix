@@ -127,7 +127,8 @@ async function init() {
       if (!p) { tooltip.classList.remove("visible"); return; }
 
       const texte = p.texte ? `<span class="tt-texte">${p.texte.toLowerCase()}</span>` : "";
-      const meta  = [p.ville, p.annee].filter(Boolean).join(" · ").toLowerCase();
+      const villeAffichee = p.ville ? p.ville.charAt(0).toUpperCase() + p.ville.slice(1).toLowerCase() : "";
+      const meta  = [villeAffichee, p.annee].filter(Boolean).join(" · ");
       tooltip.innerHTML = texte + `<span class="tt-meta">${meta}</span>`;
 
       const ox = 14, oy = 14;
