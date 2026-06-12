@@ -185,8 +185,8 @@ img { display: block; max-width: 100%; }
 
 /* Ligne toujours visible — hauteur fixe, jamais affectée par ce qui est en dessous */
 .filtres-top {
-  min-height: 140px;
-  padding: 2.5rem 0;
+  min-height: 0;
+  padding: 0.5rem 0;
   display: flex;
   align-items: center;
   justify-content: center;
