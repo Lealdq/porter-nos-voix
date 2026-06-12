@@ -185,13 +185,14 @@ img { display: block; max-width: 100%; }
 
 /* Ligne toujours visible — hauteur fixe, jamais affectée par ce qui est en dessous */
 .filtres-top {
-  min-height: 0;
-  padding: 0.5rem 0;
+  min-height: 140px;
+  padding: 2.5rem 0;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 2rem;
 }
+.filtres-top-left { margin-left: calc(50% - 11rem); }
 
 .filtres-top-left {
   display: flex;
