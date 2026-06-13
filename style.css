@@ -192,7 +192,6 @@ img { display: block; max-width: 100%; }
   justify-content: flex-start;
   gap: 2rem;
 }
-.filtres-top-left { margin-left: calc(50% - 11rem); }
 
 .filtres-top-left {
   display: flex;
