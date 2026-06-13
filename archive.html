@@ -9,7 +9,7 @@
   <meta property="og:title" content="porter nos voix — archive de pancartes">
   <meta property="og:description" content="Archive photographique mondiale de pancartes féministes.">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="style.css?v=29">
+  <link rel="stylesheet" href="style.css?v=30">
 </head>
 <body>
 
@@ -240,6 +240,20 @@
     document.addEventListener('galerie-chargee', () => {
       window.dispatchEvent(new Event('scroll'));
     });
+
+    // Aligner la barre de filtres sur la largeur du menu de navigation
+    // -> "filtrer" sous "archive", la recherche sous "à propos"
+    function alignerFiltresSurNav() {
+      const nav = document.querySelector('.site-nav');
+      const top = document.querySelector('.filtres-top');
+      if (!nav || !top) return;
+      if (window.innerWidth <= 700) { top.style.width = ''; return; }
+      top.style.width = Math.round(nav.getBoundingClientRect().width) + 'px';
+    }
+    window.addEventListener('load', alignerFiltresSurNav);
+    window.addEventListener('resize', alignerFiltresSurNav);
+    document.addEventListener('langchange', () => setTimeout(alignerFiltresSurNav, 0));
+    alignerFiltresSurNav();
   </script>
   <script src="nav.js"></script>
   <script src="lang.js"></script>
