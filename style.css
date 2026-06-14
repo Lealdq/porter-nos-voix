@@ -488,7 +488,6 @@ img { display: block; max-width: 100%; }
   padding: 0.2rem 0;
   width: 320px;
   outline: none;
-  text-transform: lowercase;
 }
 #champ-recherche::placeholder { color: var(--noir); }
 

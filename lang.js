@@ -12,7 +12,7 @@ const TRAD = {
     "nav-apropos":       "à propos",
     // Filtres archive
     "filtrer":           "filtrer",
-    "recherche":         "recherche par mot…",
+    "recherche":         "Recherche par mot…",
     "tout-effacer":      "tout effacer",
     "filtre-annee":      "année",
     "filtre-ville":      "ville",
@@ -124,7 +124,7 @@ const TRAD = {
     "nav-apropos":       "about",
     // Filtres archive
     "filtrer":           "filter",
-    "recherche":         "search by word…",
+    "recherche":         "Search by word…",
     "tout-effacer":      "clear all",
     "filtre-annee":      "year",
     "filtre-ville":      "city",
