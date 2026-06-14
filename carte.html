@@ -184,11 +184,12 @@
     .leaflet-popup-tip-container { display: none; }
     .leaflet-popup-close-button { display: none; }
 
-    /* Menu déroulant de zoom */
+    /* Menu déroulant de zoom — centré en haut comme la recherche de l'archive */
     #zoom-controls {
       position: absolute;
-      top: 3.5rem;
-      left: 1rem;
+      top: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 500;
     }
 
@@ -198,8 +199,8 @@
       background: var(--blanc);
       border: none;
       font-family: var(--font);
-      font-size: 0.72rem;
-      padding: 0.35rem 0.75rem;
+      font-size: 1.5rem;
+      padding: 0.2rem 0.5rem;
       cursor: pointer;
       color: var(--noir);
       transition: color 0.15s;
@@ -210,17 +211,19 @@
       display: none;
       position: absolute;
       top: calc(100% + 4px);
-      left: 0;
+      left: 50%;
+      transform: translateX(-50%);
       background: transparent;
       border: none;
       min-width: 100%;
       flex-direction: column;
+      align-items: center;
     }
     .zoom-dropdown.ouvert .zoom-panel { display: flex; }
 
     .zoom-option {
       font-family: var(--font);
-      font-size: 0.72rem;
+      font-size: 0.9rem;
       padding: 0.2rem 0;
       cursor: pointer;
       color: var(--gris-texte);
