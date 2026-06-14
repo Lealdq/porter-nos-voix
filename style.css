@@ -455,9 +455,7 @@ img { display: block; max-width: 100%; }
 
 .dd-check {
   display: none;
-  color: var(--rouge, #e8000d);
 }
-.dd-option.selectionne .dd-check { display: inline; }
 
 .filtre-separateur {
   width: 0.5px;
