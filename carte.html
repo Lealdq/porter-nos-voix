@@ -237,10 +237,8 @@
     /* Fond bleu clair pour la carte */
     #map { background: #e2f2fb; }
     .leaflet-tile-pane { filter: saturate(1.8) brightness(1.09); }
-    /* Carte en français (OSM France) : teintée en bleu pâle pour matcher la version anglaise */
-    body.carte-fr .leaflet-tile-pane {
-      filter: grayscale(1) sepia(1) hue-rotate(170deg) saturate(0.55) brightness(1.12) contrast(0.95);
-    }
+    /* Carte en français (OSM France, plus colorée) : adoucir pour rester minimale */
+    body.carte-fr .leaflet-tile-pane { filter: saturate(0.45) brightness(1.07) contrast(0.96); }
 
     /* Tuiles en mode nuit */
     body.mode-nuit .leaflet-tile-pane { mix-blend-mode: normal; }
