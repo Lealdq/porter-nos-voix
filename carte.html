@@ -237,6 +237,8 @@
     /* Fond bleu clair pour la carte */
     #map { background: #e2f2fb; }
     .leaflet-tile-pane { filter: saturate(1.8) brightness(1.09); }
+    /* Carte en français (OSM France, plus colorée) : adoucir pour rester minimale */
+    body.carte-fr .leaflet-tile-pane { filter: saturate(0.45) brightness(1.07) contrast(0.96); }
 
     /* Tuiles en mode nuit */
     body.mode-nuit .leaflet-tile-pane { mix-blend-mode: normal; }
@@ -300,7 +302,7 @@
   <div id="carte-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true"></div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="carte.js?v=8"></script>
+  <script src="carte.js?v=9"></script>
   <script src="nav.js"></script>
   <script src="lang.js"></script>
 </body>

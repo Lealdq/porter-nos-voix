@@ -42,6 +42,27 @@ const COORDS = {
 };
 
 let map, panneauOuvert = null, groupeModal = null, indexModal = -1;
+let coucheTuiles = null;
+
+const TUILES = {
+  fr: {
+    url: "https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png",
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap France</a>',
+  },
+  en: {
+    url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
+  },
+};
+
+function appliquerTuilesLangue() {
+  if (!map) return;
+  const lang = (window.getLang && window.getLang()) === "en" ? "en" : "fr";
+  const t = TUILES[lang];
+  if (coucheTuiles) map.removeLayer(coucheTuiles);
+  coucheTuiles = L.tileLayer(t.url, { attribution: t.attribution, maxZoom: 19 }).addTo(map);
+  document.body.classList.toggle("carte-fr", lang === "fr");
+}
 
 async function init() {
   // Charger les données
@@ -64,10 +85,9 @@ async function init() {
     zoomControl: false,
   });
 
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
-    maxZoom: 19,
-  }).addTo(map);
+  // Tuiles selon la langue : français (OSM France) / anglais (CARTO light)
+  appliquerTuilesLangue();
+  document.addEventListener("langchange", appliquerTuilesLangue);
 
   // Placer les marqueurs
   Object.entries(parVille).forEach(([key, groupe]) => {
