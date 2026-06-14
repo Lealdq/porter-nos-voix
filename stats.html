@@ -108,13 +108,14 @@
     .champ {
       display: flex;
       align-items: flex-start;
-      justify-content: flex-start;
-      gap: clamp(0.4rem, 1.4vw, 3rem);
+      justify-content: space-between;
       flex-wrap: nowrap;
       margin-bottom: 6rem;
       padding: 0 1.5rem;
-      /* Taille de cellule fluide : 7 années tiennent toujours sur une ligne */
-      --cell: clamp(3px, calc((100vw - 4rem) / 64), 16px);
+      /* Taille de cellule fluide : remplit toute la largeur, s'adapte à l'écran.
+         8 colonnes × 7 années + espacements = largeur dispo (100vw - padding) */
+      --cell: calc((100vw - 3rem) / 76);
+      gap: calc(var(--cell) * 1.2);
     }
     .champ-col { flex: 0 0 auto; }
     .champ-col {
@@ -145,7 +146,7 @@
       display: grid;
       grid-template-columns: repeat(8, var(--cell));
       grid-auto-rows: var(--cell);
-      gap: clamp(1px, 0.3vw, 4px);
+      gap: calc(var(--cell) * 0.25);
     }
     .champ-cell {
       width: var(--cell);
