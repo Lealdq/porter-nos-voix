@@ -69,14 +69,16 @@
     }
     .frise-label:hover { color: #4d2882; }
 
-    /* Bouton de mode */
+    /* Bouton de mode — centré en haut comme la recherche de l'archive */
     #controles-bas {
       position: fixed;
-      top: 65px;
-      left: 1rem;
+      top: calc(38px + 1.5rem);
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 500;
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 0.75rem;
     }
 
@@ -91,7 +93,7 @@
       color: var(--noir);
       transition: color 0.15s;
       width: auto;
-      text-align: left;
+      text-align: center;
       text-transform: capitalize;
     }
     #btn-vue:hover { color: #4d2882; }
@@ -286,18 +288,13 @@
 
   <div id="controles-bas">
     <button id="btn-vue">frise chronologique</button>
-    <div class="curseur-col-wrap">
-      <button class="curseur-signe" id="btn-zoom-moins" aria-label="Dézoomer">−</button>
-      <input type="range" id="curseur-zoom" min="0.15" max="1.5" step="0.01" value="0.15" aria-label="Zoom">
-      <button class="curseur-signe" id="btn-zoom-plus" aria-label="Zoomer">+</button>
-    </div>
   </div>
 
 <div id="explore-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true"></div>
 
   <div id="explore-tooltip" aria-hidden="true"></div>
 
-  <script src="explore.js?v=25"></script>
+  <script src="explore.js?v=26"></script>
   <script src="nav.js"></script>
   <script src="lang.js"></script>
 </body>

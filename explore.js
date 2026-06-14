@@ -157,24 +157,26 @@ async function init() {
   });
 
   const curseur = document.getElementById("curseur-zoom");
-  curseur.addEventListener("input", () => {
-    const ns    = parseFloat(curseur.value);
-    const sc    = document.getElementById("scene");
-    const mx    = sc.clientWidth  / 2;
-    const my    = sc.clientHeight / 2;
-    tx = targetTx = mx - (mx - tx) * (ns / scale);
-    ty = targetTy = my - (my - ty) * (ns / scale);
-    scale = targetScale = ns;
-    applyTransform();
-  });
+  if (curseur) {
+    curseur.addEventListener("input", () => {
+      const ns    = parseFloat(curseur.value);
+      const sc    = document.getElementById("scene");
+      const mx    = sc.clientWidth  / 2;
+      const my    = sc.clientHeight / 2;
+      tx = targetTx = mx - (mx - tx) * (ns / scale);
+      ty = targetTy = my - (my - ty) * (ns / scale);
+      scale = targetScale = ns;
+      applyTransform();
+    });
 
-  function changerZoom(delta) {
-    const ns = Math.max(parseFloat(curseur.min), Math.min(parseFloat(curseur.max), parseFloat(curseur.value) + delta));
-    curseur.value = ns;
-    curseur.dispatchEvent(new Event("input"));
+    const changerZoom = (delta) => {
+      const ns = Math.max(parseFloat(curseur.min), Math.min(parseFloat(curseur.max), parseFloat(curseur.value) + delta));
+      curseur.value = ns;
+      curseur.dispatchEvent(new Event("input"));
+    };
+    document.getElementById("btn-zoom-moins")?.addEventListener("click", () => changerZoom(-0.1));
+    document.getElementById("btn-zoom-plus")?.addEventListener("click",  () => changerZoom(+0.1));
   }
-  document.getElementById("btn-zoom-moins")?.addEventListener("click", () => changerZoom(-0.1));
-  document.getElementById("btn-zoom-plus")?.addEventListener("click",  () => changerZoom(+0.1));
 }
 
 /* ── Positions ────────────────────────────────────────── */
