@@ -117,6 +117,9 @@ img { display: block; max-width: 100%; }
 /* Caché sur desktop, visible seulement dans le hamburger mobile */
 .nav-lang-mobile { display: none; }
 
+/* Bouton hamburger injecté par nav.js — masqué sur desktop (visible en mobile) */
+.nav-hamburger { display: none; }
+
 /* Logo — tout à gauche */
 .site-logo {
   font-family: var(--font);
