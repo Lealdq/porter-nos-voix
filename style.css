@@ -257,10 +257,13 @@ img { display: block; max-width: 100%; }
 }
 
 /* ── Filtres actifs (tags) ── */
+/* Positionné à gauche de "filtrer" sans décaler son centrage */
 .effacer-col {
-  position: relative;
-  align-self: center;
-  order: -1;
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-right: 0.9rem;
 }
 .filtres-actifs-bar {
   position: absolute;
