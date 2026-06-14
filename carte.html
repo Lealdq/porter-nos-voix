@@ -211,26 +211,26 @@
       display: none;
       position: absolute;
       top: calc(100% + 4px);
-      left: 50%;
-      transform: translateX(-50%);
+      left: 0;
       background: transparent;
       border: none;
       min-width: 100%;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
     }
     .zoom-dropdown.ouvert .zoom-panel { display: flex; }
 
     .zoom-option {
       font-family: var(--font);
       font-size: 0.9rem;
-      padding: 0.2rem 0;
+      padding: 0.2rem 0.5rem;
       cursor: pointer;
       color: var(--violet);
       white-space: nowrap;
       transition: color 0.15s;
       opacity: 0.8;
       letter-spacing: 0.05em;
+      text-align: left;
     }
     .zoom-option:hover { color: #e8000d; opacity: 1; }
 
