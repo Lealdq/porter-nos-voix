@@ -188,25 +188,31 @@ img { display: block; max-width: 100%; }
   min-height: 140px;
   padding: 2.5rem 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
+  justify-content: center;
+  gap: 1.25rem;
   margin: 0 auto;
   max-width: 100%;
 }
 
-.filtres-top-left {
+/* Recherche par mot en haut, filtrer en dessous, le tout centré */
+.filtres-top-right {
+  order: 1;
   display: flex;
   align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.filtres-top-left {
+  order: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 0.75rem;
   flex-shrink: 0;
   position: relative;
-}
-
-.filtres-top-right {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
 }
 
 #pancartes-count {
