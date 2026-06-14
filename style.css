@@ -257,6 +257,7 @@ img { display: block; max-width: 100%; }
 .effacer-col {
   position: relative;
   align-self: center;
+  order: -1;
 }
 .filtres-actifs-bar {
   position: absolute;
@@ -421,7 +422,8 @@ img { display: block; max-width: 100%; }
 .dd-option:hover { opacity: 1; color: var(--noir); }
 .dd-option.selectionne {
   opacity: 1;
-  color: var(--noir);
+  color: var(--rouge, #e8000d);
+  font-weight: 700;
 }
 
 .dd-option-label {
@@ -447,7 +449,9 @@ img { display: block; max-width: 100%; }
 
 .dd-check {
   display: none;
+  color: var(--rouge, #e8000d);
 }
+.dd-option.selectionne .dd-check { display: inline; }
 
 .filtre-separateur {
   width: 0.5px;
